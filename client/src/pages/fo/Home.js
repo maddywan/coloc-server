@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import '../styles.css';
 import { Smile, Users, ReceiptText } from 'lucide-react';
-import { useNavigate } from "react-router-dom";
+//import { useNavigate } from "react-router-dom";
 import UsersPage from './UsersPage';
 
 const Home = () => {
@@ -10,7 +10,7 @@ const Home = () => {
 
   const [users, setUsers] = useState([]);
 
-  const [modalIsOpen, setModalIsOpen] = useState(false);
+  //const [modalIsOpen, setModalIsOpen] = useState(false);
 
   const pages = [
     { name: "Humeur", icon: <Smile size={24} />, pageFile: <></> },
@@ -18,7 +18,7 @@ const Home = () => {
     { name: "Colocataires", icon: <Users size={24} />, pageFile: <UsersPage users={users}/> }
   ];
   const [activePage, setActivePage] = useState("Préparation");
-  const navigate = useNavigate();
+  //const navigate = useNavigate();
   useEffect(() => {window.scrollTo(0,0);}, [activePage]);
 
   /* DATABASE */
