@@ -65,6 +65,26 @@ app.post('/cocktailimage', upload.single('image'), async (req, res) => {
   }
 });
 
+// Users
+app.get('/user', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT * FROM "user"');
+
+    const users = result.rows;
+
+    /*for (const user of users) {
+      const purchaseResult = await pool.query(`SELECT * FROM purchase p WHERE p.user_id = $1`, [user.id]);
+      user.purchases = purchaseResult.rows;
+    }*/
+
+    res.json(users);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
+
+/*
 // Cocktail
 
 app.get('/cocktail', async (req, res) => {
@@ -331,10 +351,6 @@ app.delete('/deleteuser', async (req, res) => {
 
     const resultPurchases = await pool.query(`DELETE FROM purchase WHERE user_id = $1 RETURNING *;`,[userId]);
 
-    /*if (resultPurchases.rows.length === 0) {
-      return res.status(500).json({ message: 'Error with the deleteuser request (purchases).' });
-    }*/
-
     const result = await pool.query(`DELETE FROM "user" WHERE id = $1 RETURNING *;`,[userId]);
 
     if (result.rows.length === 0) {
@@ -407,6 +423,7 @@ app.post('/purchaserefund', async (req, res) => {
     res.status(500).send('Server Error');
   }
 });
+*/
 
 // General
 
