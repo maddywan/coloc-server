@@ -43,7 +43,6 @@ function VoiceButton({ onResult }) {
 
         recognition.onend = () => {
             console.log("🛑 Fin écoute");
-            setDebug("🛑 Fin écoute");
             setListening(false);
         };
 
