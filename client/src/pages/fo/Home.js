@@ -46,7 +46,7 @@ const Home = () => {
       <div>
         {pages.map((page) => (activePage === page.name && page.pageFile))}
       </div>
-      <VoiceButton />
+      <VoiceButton onFinished={fetchAll} />
       <div className='toolbar-space'></div>
       <div className="bottom-toolbar">
         {pages.map((page) => (

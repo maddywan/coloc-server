@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 
-function VoiceButton({ onResult }) {
+function VoiceButton({ onFinished }) {
     const [listening, setListening] = useState(false);
     const recognitionRef = useRef(null);
     const [debug, setDebug] = useState("Appuyer sur le bouton pour commencer");
@@ -48,6 +48,7 @@ function VoiceButton({ onResult }) {
 
             setListening(false);
             recognition.stop();
+            onFinished();
         };
 
         recognition.onerror = (event) => {
