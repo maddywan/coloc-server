@@ -14,6 +14,7 @@ const multer = require('multer');
 const cloudinary = require('cloudinary').v2;
 const { Readable } = require('stream');
 const { log } = require('console');
+const OpenAI = require('openai');
 
 // Config Cloudinary
 cloudinary.config({
@@ -62,6 +63,103 @@ app.post('/cocktailimage', upload.single('image'), async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: 'Image upload failed.', error: err.message });
+  }
+});
+
+// Open AI Config
+const openai = new OpenAI({
+  apiKey: process.env.OPENAIKEY
+});
+
+app.post('/iarequest', async (req, res) => {
+  try {
+    const { message } = req.body;
+
+    if (!message) {
+      return res.status(400).json({
+        message: 'No message provided.'
+      });
+    }
+
+    const response = await openai.responses.create({
+      model: 'gpt-5.6-luna',
+      instructions: `
+        Tu es un système d'organisation, analyse le message de l'utilisateur.
+        Si la commande concerne :
+        - La création d'un profil utilisateur : type = "createuser", title = le nom de l'utilisateur
+        - L'ajout d'une tâche : type = "task", title = le nom de la tâche
+        - L'humeur : type = "humeur", title = l'humeur
+        Si la commande correspond à l'un des points mais qu'il te manque une information : type = "missinginfo"
+        Sinon : type = "error"
+        `,
+      input: message,
+      text: {
+        format: {
+          type: "json_schema",
+          name: "organisation",
+          strict: true,
+          schema: {
+            type: "object",
+            properties: {
+              type: {
+                type: "string",
+                enum: ["createuser","task","humeur","missinginfo","error"]
+              },
+              title: {
+                type: ["string", "null"]
+              },
+              value: {
+                type: ["string", "null"]
+              }
+            },
+            required: ["type","title","value"],
+            additionalProperties: false
+          }
+        }
+      }
+    });
+
+    const command = JSON.parse(response.output_text);
+    console.log(command);
+
+    if (command && command.type == "createuser") {
+      try {
+        const result = await pool.query(`INSERT INTO "user" (name) VALUES ($1) RETURNING *;`,[command.title]);
+        console.log("creation de l'utilisateur")
+        if (result.rows.length === 0) return res.status(500).json({ message: 'Error while creating new user.' });
+        res.json(result.rows[0]);
+      } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server Error');
+      }
+    } else {
+      res.status(200).json({command: command});
+    }
+
+  } catch (err) {
+    console.error(err);
+
+    res.status(500).json({
+      message: 'OpenAI request failed.',
+      error: err.message
+    });
+  }
+});
+
+app.post('/newuser', async (req, res) => {
+  try {
+    const { username } = req.body;
+
+    const result = await pool.query(`INSERT INTO "user" (name) VALUES ($1) RETURNING *;`,[username]);
+
+    if (result.rows.length === 0) {
+      return res.status(500).json({ message: 'Error with the newuser request.' });
+    }
+
+    res.json(result.rows[0]);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
   }
 });
 
