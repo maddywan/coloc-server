@@ -3,6 +3,7 @@ import '../styles.css';
 import { Smile, Users, ReceiptText } from 'lucide-react';
 //import { useNavigate } from "react-router-dom";
 import UsersPage from './UsersPage';
+import VoiceButton from "./VoiceButton";
 
 const Home = () => {
 
@@ -17,7 +18,7 @@ const Home = () => {
     { name: "Tâches", icon: <ReceiptText size={24} />, pageFile: <></> },
     { name: "Colocataires", icon: <Users size={24} />, pageFile: <UsersPage users={users}/> }
   ];
-  const [activePage, setActivePage] = useState("Préparation");
+  const [activePage, setActivePage] = useState("Colocataires");
   //const navigate = useNavigate();
   useEffect(() => {window.scrollTo(0,0);}, [activePage]);
 
@@ -40,26 +41,30 @@ const Home = () => {
     fetchAll();
   }, [fetchAll]);
 
-  /* MODALES */
+  const handleVoiceResult = async (text) => {
+    console.log("Commande vocale :", text);
 
-  /*const openModal = (cocktail) => {
-    document.body.classList.add('no-scroll');
-    setSelectedCocktail(cocktail);
-    setModalIsOpen(true);
+    const response = await fetch(`/iarequest`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        message: text,
+      }),
+    });
+
+    const result = await response.json();
+
+    console.log("Réponse serveur :", result);
   };
-
-  const closeModal = () => {
-    document.body.classList.remove('no-scroll');
-    setModalIsOpen(false);
-    setSelectedCocktail(null);
-  };*/
 
   return (
     <div>
       <div>
         {pages.map((page) => (activePage === page.name && page.pageFile))}
       </div>
-
+      <VoiceButton onResult={handleVoiceResult} />
       <div className='toolbar-space'></div>
       <div className="bottom-toolbar">
         {pages.map((page) => (
@@ -73,14 +78,6 @@ const Home = () => {
           </button>
         ))}
       </div>
-
-      {/* Modals */}
-
-      {/*<CocktailModal
-        isOpen={modalIsOpen}
-        onRequestClose={closeModal}
-        cocktail={selectedCocktail}
-      />*/}
     </div>
   );
 };
