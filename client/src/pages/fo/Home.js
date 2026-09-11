@@ -41,30 +41,12 @@ const Home = () => {
     fetchAll();
   }, [fetchAll]);
 
-  const handleVoiceResult = async (text) => {
-    console.log("Commande vocale :", text);
-
-    const response = await fetch(`/iarequest`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        message: text,
-      }),
-    });
-
-    const result = await response.json();
-
-    console.log("Réponse serveur :", result);
-  };
-
   return (
     <div>
       <div>
         {pages.map((page) => (activePage === page.name && page.pageFile))}
       </div>
-      <VoiceButton onResult={handleVoiceResult} />
+      <VoiceButton />
       <div className='toolbar-space'></div>
       <div className="bottom-toolbar">
         {pages.map((page) => (
