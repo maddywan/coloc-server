@@ -30,6 +30,7 @@ function VoiceButton({ onResult }) {
         recognition.onresult = async (event) => {
             const text = event.results[0][0].transcript;
             console.log("📝 Résultat :", text);
+            setDebug(text);
 
             setListening(false);
             recognition.stop();
