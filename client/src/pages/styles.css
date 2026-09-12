@@ -127,8 +127,8 @@ button {
     padding: 0 10px;
 }
 
-.text-hr span::before, .text-hr span::after {
-    content: " • ";
+h2 {
+    margin: 8px;
 }
 
 .vertical-hr {
@@ -238,7 +238,7 @@ button {
     display: flex;
     gap: 0px;
     width: calc(100vw - 24px);
-    height: calc(100vh - 400px);
+    height: calc(100vh - 340px);
     margin: auto;
 }
 
@@ -255,11 +255,22 @@ button {
 }
 
 .kanban-column-content {
-    background: rgba(100, 160, 210, 0.35);
     border-radius: 10px;
     width: 100%;
     height: 100%;
     overflow-y: auto;
+}
+
+.kanban-column-content.todo {
+    background: rgba(100, 160, 210, 0.35);
+}
+
+.kanban-column-content.next {
+    background: rgba(210, 100, 195, 0.35);
+}
+
+.kanban-column-content.finished {
+    background: rgba(107, 210, 100, 0.35);
 }
 
 .kanban-item {

@@ -22,10 +22,8 @@ const UsersPage = ({ users }) => {
   }
 
   return (
-    <>
-      <div className='article-column-container'>
-        <h2 className='text-hr'><span>Colocataires</span></h2>
-      </div>
+    <div className='article-column-container'>
+      <h2>Colocataires</h2>
       {users.sort((a,b) => {return a.name.localeCompare(b.name);}).map((user) => {            
         return (
         <>
@@ -45,7 +43,7 @@ const UsersPage = ({ users }) => {
           </div>
         </>
       )})}
-    </>
+    </div>
   );
 };
 

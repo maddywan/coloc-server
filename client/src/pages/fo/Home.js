@@ -5,6 +5,7 @@ import { Smile, Users, ReceiptText, Speaker, ScrollText, Settings } from 'lucide
 import UsersPage from './UsersPage';
 import VoiceButton from "./VoiceButton";
 import TasksPage from './TasksPage';
+import SettingsPage from './SettingsPage';
 
 const Home = () => {
 
@@ -47,10 +48,10 @@ const Home = () => {
   const pages = [
     { line: 1, name: "Humeur", icon: <Smile size={30} />, pageFile: <></> },
     { line: 1, name: "Tâches", icon: <ReceiptText size={30} />, pageFile: <TasksPage tasks={tasks}/> },
-    { line: 1, name: "Soundboard", icon: <Speaker size={30} />, pageFile: <UsersPage users={users}/> },
-    { line: 2, name: "Colocation", icon: <Users size={30} />, pageFile: <></> },
+    { line: 1, name: "Colocation", icon: <Users size={30} />, pageFile: <UsersPage users={users}/> },
+    { line: 2, name: "Soundboard", icon: <Speaker size={30} />, pageFile: <></> },
     { line: 2, name: "Courses", icon: <ScrollText size={30} />, pageFile: <></> },
-    { line: 2, name: "Paramètres", icon: <Settings size={30} />, pageFile: <UsersPage users={users}/> }
+    { line: 2, name: "Paramètres", icon: <Settings size={30} />, pageFile: <SettingsPage/> }
   ];
   const [activePage, setActivePage] = useState("Humeur");
   //const navigate = useNavigate();

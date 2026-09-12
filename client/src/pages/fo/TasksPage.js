@@ -21,11 +21,12 @@ const TasksPage = ({ tasks }) => {
   }*/
 
   return (
-    <>
+    <div className='article-column-container'>
+      <h2>Tâches</h2>
       <div className='kanban'>
         <div className='kanban-column'>
           <div className='kanban-column-title'>À faire</div>
-          <div className='kanban-column-content'>
+          <div className='kanban-column-content todo'>
             {tasks.map((task) =>
               <div className='kanban-item'>
                 <div className='kanban-item-title'>• {task.title}</div>
@@ -36,13 +37,13 @@ const TasksPage = ({ tasks }) => {
         </div>
         <div className='kanban-column'>
           <div className='kanban-column-title'>Prochaines tâches</div>
-          <div className='kanban-column-content'>
+          <div className='kanban-column-content next'>
             
           </div>
         </div>
         <div className='kanban-column'>
           <div className='kanban-column-title'>Terminées</div>
-          <div className='kanban-column-content'>
+          <div className='kanban-column-content finished'>
             
           </div>
         </div>
@@ -66,7 +67,7 @@ const TasksPage = ({ tasks }) => {
           </div>
         </>
       )})*/}
-    </>
+    </div>
   );
 };
 
