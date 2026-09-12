@@ -163,6 +163,20 @@ app.post('/newuser', async (req, res) => {
   }
 });
 
+// Tasks
+app.get('/task', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT * FROM task');
+
+    const tasks = result.rows;
+
+    res.json(tasks);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
+
 // Users
 app.get('/user', async (req, res) => {
   try {

@@ -232,103 +232,42 @@ button {
     cursor: pointer;
 }
 
-/* Cocktail & Stock */
+/* Kanban */
 
-.cocktail-container, .stock-container, .user-container {
-    margin: 10px;
+.kanban {
+    display: flex;
+    gap: 0px;
+    width: calc(100vw - 24px);
+    height: calc(100vh - 400px);
+    margin: auto;
+}
+
+.kanban-column {
+    flex: 1;
+    min-width: 0;
+    padding: 10px;
+}
+
+.kanban-column-title {
     text-align: center;
-    border: 1px solid var(--text);
-    padding: 3px;
-    background-color: var(--background-soft);
-    cursor: pointer;
+    font-size: 20px;
+    margin-bottom: 10px;
 }
 
-.stock-container, .user-container {
-    margin: 5px;
+.kanban-column-content {
+    background: rgba(100, 160, 210, 0.35);
+    border-radius: 10px;
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
 }
 
-.user-container {
-    width: 100px;
-    min-height: 100px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.cocktail-image {
-    width: 150px;
-    height: 150px;
-    object-fit: cover;
-}
-
-.stock-image {
-    width: 100px;
-    height: 100px;
-    object-fit: cover;
-}
-
-.cocktail-name, .stock-name, .user-name {
-    margin: 0 2px 2px 2px;
-    font-size: 1.1em;
-    color: var(--text);
-    overflow: hidden;    
-}
-
-.cocktail-name, .stock-name {
-    white-space: nowrap;
-    text-overflow: clip;
-}
-
-.stock-name {
-    max-width: 95px;
-    font-size: 1em;
-}
-
-p.cocktail-name, p.stock-name {
-    font-size: 0.8em;
-}
-
-.cocktail-image-wrapper {
-    position: relative;
-    display: inline-block;
-}
-
-.cocktail-spirit, .stock-spirit, .stock-tag {
-    position: absolute;
-    top: -8px;
-    right: 5px;
-    font-size: 0.8em;
-    padding: 2px 7px;
-    border-radius: 7px;
-    background-color: var(--tag);
-    color: white;
-    box-shadow: 0 0 5px var(--shadow);
-}
-
-.stock-price {
-    position: absolute;
-    top: 64px;
-    left: 50%;
-    transform: translateX(-50%);
-    text-wrap: nowrap;
-    font-size: 0.8em;
-    padding: 2px 7px;
-    border-radius: 7px;
-    background-color: var(--text);
-    color: var(--background);
-    box-shadow: 0 0 5px var(--shadow);
-}
-
-.stock-tag {
-    right: 5px;
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    padding: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.8em;
+.kanban-item {
+    margin: 10px;
+    border-radius: 10px;
+    background-color: #FFFFFF99;
+    color: black;
+    padding: 5px;
 }
 
 /* Users */
@@ -354,66 +293,6 @@ p.cocktail-name, p.stock-name {
 
 .user-purchase-refunded {
     color: var(--text-soft);
-}
-
-/* Cocktail Editor */
-
-.cocktail-editor-container {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-}
-
-.cocktail-editor-container > * {
-    margin: 0 10px;
-}
-
-.cocktail-editor-column {
-    text-align: center;
-    border: 1px solid var(--text);
-    background-color: var(--background-soft);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 10px;
-    height: fit-content;
-}
-
-.cocktail-editor-column > p {
-    margin: 15px 0 5px 0;
-}
-
-.cocktail-editor-image {
-    width: 150px;
-    height: 150px;
-    object-fit: cover;
-}
-
-.cocktail-editor-input {
-    text-align: left;
-    margin-block-start: 0;
-    margin-block-end: 0;
-    margin: 0px;
-    cursor: pointer;
-    padding: 3px;
-    font-size: 1.05em;
-    width: 100%;
-    box-sizing: border-box;
-    border: 1px white solid;
-    color: var(--background);
-    background-color: var(--text);
-}
-
-.cocktail-editor-recipe {
-    border: 1px solid white;
-    padding: 10px 10px 0 10px;
-    box-sizing: border-box;
-    width: 100%;
-    margin-top: 10px;
-}
-
-.cocktail-editor-recipe > * {
-    margin-bottom: 10px;
 }
 
 /* Toggleswitches */
@@ -456,6 +335,113 @@ p.cocktail-name, p.stock-name {
     background-color: var(--background-soft)!important;
 }
 
+/* Voice Button */
+
+.voice-button {
+    position: fixed;
+    left: 30px;
+    bottom: 270px;
+
+    width: 90px;
+    height: 90px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: none;
+    border-radius: 50%;
+
+    background: white;
+    color: #1e293b;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 8px 25px rgba(0, 0, 0, 0.15),
+        0 2px 8px rgba(0, 0, 0, 0.08);
+
+    transition:
+        transform 0.2s ease,
+        background 0.2s ease,
+        box-shadow 0.2s ease;
+
+    z-index: 1000;
+}
+
+.voice-button:hover {
+    transform: scale(1.08);
+
+    box-shadow:
+        0 12px 30px rgba(0, 0, 0, 0.2),
+        0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.voice-button:active {
+    transform: scale(0.95);
+}
+
+.voice-icon {
+    width: 42px;
+    height: 42px;
+    stroke-width: 2.5;
+}
+
+.voice-button.listening {
+    background: #ef4444;
+    color: white;
+
+    box-shadow:
+        0 0 0 10px rgba(239, 68, 68, 0.15),
+        0 8px 25px rgba(239, 68, 68, 0.35);
+
+    animation: pulse 1.5s infinite;
+}
+
+/* ⏳ Traitement */
+.voice-button.processing {
+    background: white;
+    color: #3b82f6;
+
+    cursor: wait;
+}
+
+.spinning {
+    animation: spin 1s linear infinite;
+}
+
+/* Animation du bouton rouge */
+@keyframes pulse {
+    0% {
+        box-shadow:
+            0 0 0 0 rgba(239, 68, 68, 0.4),
+            0 8px 25px rgba(239, 68, 68, 0.35);
+    }
+
+    70% {
+        box-shadow:
+            0 0 0 15px rgba(239, 68, 68, 0),
+            0 8px 25px rgba(239, 68, 68, 0.35);
+    }
+
+    100% {
+        box-shadow:
+            0 0 0 0 rgba(239, 68, 68, 0),
+            0 8px 25px rgba(239, 68, 68, 0.35);
+    }
+}
+
+/* Rotation du loader */
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
 /* Toolbar */
 
 .bottom-toolbar {
@@ -464,24 +450,35 @@ p.cocktail-name, p.stock-name {
     left: 0;
     width: 100%;
     background: var(--background-soft);
-    box-shadow: 0 0 5px var(--shadow);
-    border-top: 1px solid white;
+    height: 120px;
+    
     display: flex;
     justify-content: space-around;
 }
 
+.bottom-toolbar.up {
+    bottom: 120px;
+    border-top: 1px solid white;
+}
+
 .toolbar-button {
     width: 100%;
-    padding: 5px 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    font-size: 14px;
-    font-weight: 500;
     color: var(--text);
     background: var(--background);
     border: none;
     cursor: pointer;
+    transition: all 0.3s;
+}
+
+.toolbar-button div {
+    width: 100%;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    font-size: 20px;
+    font-weight: 500;
     transition: all 0.3s;
 }
 
@@ -491,7 +488,7 @@ p.cocktail-name, p.stock-name {
 }
 
 .toolbar-space {
-    height: 70px;
+    height: 240px;
 }
 
 /* Modals */

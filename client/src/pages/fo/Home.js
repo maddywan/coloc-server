@@ -1,28 +1,30 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import '../styles.css';
-import { Smile, Users, ReceiptText } from 'lucide-react';
+import { Smile, Users, ReceiptText, Speaker, ScrollText, Settings } from 'lucide-react';
 //import { useNavigate } from "react-router-dom";
 import UsersPage from './UsersPage';
 import VoiceButton from "./VoiceButton";
+import TasksPage from './TasksPage';
 
 const Home = () => {
 
-  /* VARIABLES */
+  /* NAVIGATION */
 
-  const [users, setUsers] = useState([]);
-
-  //const [modalIsOpen, setModalIsOpen] = useState(false);
-
-  const pages = [
-    { name: "Humeur", icon: <Smile size={24} />, pageFile: <></> },
-    { name: "Tâches", icon: <ReceiptText size={24} />, pageFile: <></> },
-    { name: "Colocataires", icon: <Users size={24} />, pageFile: <UsersPage users={users}/> }
-  ];
-  const [activePage, setActivePage] = useState("Colocataires");
-  //const navigate = useNavigate();
-  useEffect(() => {window.scrollTo(0,0);}, [activePage]);
+  
 
   /* DATABASE */
+
+  const [tasks, setTasks] = useState([]);
+  const [users, setUsers] = useState([]);
+
+  const fetchTasks = useCallback(() => {
+    fetch("/task")
+      .then((res) => res.json())
+      .then((data) => {
+        setTasks(data);
+      })
+      .catch((error) => console.error("Error fetching tasks:", error));
+  }, []);
 
   const fetchUsers = useCallback(() => {
     fetch("/user")
@@ -34,29 +36,58 @@ const Home = () => {
   }, []);
 
   const fetchAll = useCallback(() => {
+    fetchTasks();
     fetchUsers();
-  }, [fetchUsers]);
+  }, [fetchTasks,fetchUsers]);
 
   useEffect(() => {
     fetchAll();
   }, [fetchAll]);
 
+  const pages = [
+    { line: 1, name: "Humeur", icon: <Smile size={30} />, pageFile: <></> },
+    { line: 1, name: "Tâches", icon: <ReceiptText size={30} />, pageFile: <TasksPage tasks={tasks}/> },
+    { line: 1, name: "Soundboard", icon: <Speaker size={30} />, pageFile: <UsersPage users={users}/> },
+    { line: 2, name: "Colocation", icon: <Users size={30} />, pageFile: <></> },
+    { line: 2, name: "Courses", icon: <ScrollText size={30} />, pageFile: <></> },
+    { line: 2, name: "Paramètres", icon: <Settings size={30} />, pageFile: <UsersPage users={users}/> }
+  ];
+  const [activePage, setActivePage] = useState("Humeur");
+  //const navigate = useNavigate();
+  useEffect(() => {window.scrollTo(0,0);}, [activePage]);
+
   return (
     <div>
       <div>
-        {pages.map((page) => (activePage === page.name && page.pageFile))}
+        {pages.find((page) => (activePage === page.name)).pageFile}
       </div>
       <VoiceButton onFinished={fetchAll} />
       <div className='toolbar-space'></div>
-      <div className="bottom-toolbar">
-        {pages.map((page) => (
+       <div className="bottom-toolbar up">
+        {pages.map((page) => (page.line === 1 &&
           <button
             key={page.name}
             onClick={() => setActivePage(page.name)}
             className={`toolbar-button ${activePage === page.name ? "active" : ""}`}
           >
-            {page.icon}
-            <span style={{paddingTop:"5px"}}>{page.name}</span>
+            <div>
+              {page.icon}
+              <span style={{paddingTop:"5px"}}>{page.name}</span>
+            </div>
+          </button>
+        ))}
+      </div>
+      <div className="bottom-toolbar">
+        {pages.map((page) => (page.line === 2 &&
+          <button
+            key={page.name}
+            onClick={() => setActivePage(page.name)}
+            className={`toolbar-button ${activePage === page.name ? "active" : ""}`}
+          >
+            <div>
+              {page.icon}
+              <span style={{paddingTop:"5px"}}>{page.name}</span>
+            </div>
           </button>
         ))}
       </div>
