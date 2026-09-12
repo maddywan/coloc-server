@@ -87,7 +87,7 @@ app.post('/iarequest', async (req, res) => {
         Tu es un système d'organisation, analyse le message de l'utilisateur.
         Si la commande concerne :
         - La création d'un profil utilisateur : type = "createuser", title = le nom de l'utilisateur
-        - L'ajout d'une tâche : type = "task", title = le nom de la tâche
+        - L'ajout d'une tâche : type = "createtask", title = le nom de la tâche très concis en moins de 3 mots, value = la description de la tâche précise
         - L'humeur : type = "humeur", title = l'humeur
         Si la commande correspond à l'un des points mais qu'il te manque une information : type = "missinginfo"
         Sinon : type = "error"
@@ -103,7 +103,7 @@ app.post('/iarequest', async (req, res) => {
             properties: {
               type: {
                 type: "string",
-                enum: ["createuser","task","humeur","missinginfo","error"]
+                enum: ["createuser","createtask","humeur","missinginfo","error"]
               },
               title: {
                 type: ["string", "null"]
@@ -122,15 +122,27 @@ app.post('/iarequest', async (req, res) => {
     const command = JSON.parse(response.output_text);
     console.log(command);
 
-    if (command && command.type == "createuser") {
-      try {
-        const result = await pool.query(`INSERT INTO "user" (name) VALUES ($1) RETURNING *;`,[command.title]);
-        console.log("creation de l'utilisateur")
-        if (result.rows.length === 0) return res.status(500).json({ message: 'Error while creating new user.' });
-        res.json(result.rows[0]);
-      } catch (err) {
-        console.error(err.message);
-        res.status(500).send('Server Error');
+    if (command) {
+      if (command.type == "createuser") {
+        try {
+          const result = await pool.query(`INSERT INTO "user" (name) VALUES ($1) RETURNING *;`,[command.title]);
+          console.log("creation de l'utilisateur")
+          if (result.rows.length === 0) return res.status(500).json({ message: 'Error while creating new user.' });
+          res.json(result.rows[0]);
+        } catch (err) {
+          console.error(err.message);
+          res.status(500).send('Server Error');
+        }
+      } else if (command.type == "createtask") {
+        try {
+          const result = await pool.query(`INSERT INTO task (title,description) VALUES ($1,$2) RETURNING *;`,[command.title,command.value]);
+          console.log("creation d'une tâche")
+          if (result.rows.length === 0) return res.status(500).json({ message: 'Error while creating new task.' });
+          res.json(result.rows[0]);
+        } catch (err) {
+          console.error(err.message);
+          res.status(500).send('Server Error');
+        }
       }
     } else {
       res.status(200).json({command: command});

@@ -341,9 +341,10 @@ button {
     position: fixed;
     left: 30px;
     bottom: 270px;
-
-    width: 90px;
-    height: 90px;
+    left: 50%;
+    margin-left: -60px;
+    width: 120px;
+    height: 120px;
 
     display: flex;
     align-items: center;
@@ -371,7 +372,6 @@ button {
 
 .voice-button:hover {
     transform: scale(1.08);
-
     box-shadow:
         0 12px 30px rgba(0, 0, 0, 0.2),
         0 4px 10px rgba(0, 0, 0, 0.1);
@@ -382,9 +382,9 @@ button {
 }
 
 .voice-icon {
-    width: 42px;
-    height: 42px;
-    stroke-width: 2.5;
+    width: 50px;
+    height: 50px;
+    stroke-width: 2;
 }
 
 .voice-button.listening {
@@ -398,11 +398,9 @@ button {
     animation: pulse 1.5s infinite;
 }
 
-/* ⏳ Traitement */
 .voice-button.processing {
     background: white;
-    color: #3b82f6;
-
+    color: black;
     cursor: wait;
 }
 

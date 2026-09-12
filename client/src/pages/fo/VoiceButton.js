@@ -58,6 +58,7 @@ function VoiceButton({ onFinished }) {
 
         recognition.onerror = (event) => {
             console.log("❌ Erreur :", event.error);
+            if (event.error === "not-allowed") window.alert("L'utilisation du micro n'est pas autorisée.");
             setListening(false);
         };
 
