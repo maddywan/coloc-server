@@ -72,9 +72,35 @@ function VoiceButton({ onFinished }) {
         recognition.start();
   };
 
+  const writeMode = async() => {
+    setListening(true);
+    setProcessing(false);
+    const text = window.prompt("Commande :");
+    setDebug(text);
+    setProcessing(true);
+
+    const response = await fetch(`/iarequest`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            message: text,
+        }),
+    });
+
+    const result = await response.json();
+
+    console.log("Réponse serveur :", result);
+
+    setProcessing(false);
+    setListening(false);
+    onFinished();
+  }
+
   return (
     <>
-        <button onClick={startRecognition}
+        <button onClick={writeMode}
             className={`voice-button ${
                     listening ? "listening" : ""
                 } ${processing ? "processing" : ""}`}

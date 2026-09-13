@@ -261,24 +261,30 @@ h2 {
     overflow-y: auto;
 }
 
-.kanban-column-content.todo {
-    background: rgba(100, 160, 210, 0.35);
-}
-
-.kanban-column-content.next {
-    background: rgba(210, 100, 195, 0.35);
-}
-
-.kanban-column-content.finished {
-    background: rgba(107, 210, 100, 0.35);
-}
-
 .kanban-item {
     margin: 10px;
     border-radius: 10px;
     background-color: #FFFFFF99;
     color: black;
     padding: 5px;
+}
+
+.kanban-item {
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+}
+
+.kanban-item:active {
+  cursor: grabbing;
+}
+
+.kanban-column-content {
+  min-height: 150px;
+}
+
+.drag-over {
+  opacity: 0.8;
 }
 
 /* Users */

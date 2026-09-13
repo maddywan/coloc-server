@@ -85,10 +85,19 @@ app.post('/iarequest', async (req, res) => {
       model: 'gpt-5.6-luna',
       instructions: `
         Tu es un système d'organisation, analyse le message de l'utilisateur.
+        Pour information, nous sommes le 13/09/2026 à Lille.
+
         Si la commande concerne :
-        - La création d'un profil utilisateur : type = "createuser", title = le nom de l'utilisateur
-        - L'ajout d'une tâche : type = "createtask", title = le nom de la tâche très concis en moins de 3 mots, value = la description de la tâche précise
+        - La création d'un profil utilisateur :
+          type = "createuser"
+          title = le nom de l'utilisateur
+        - L'ajout d'une tâche :
+          type = "createtask"
+          title = le nom de la tâche très concis en moins de 3 mots
+          value = la description de la tâche précise
+          date = la date limite de la tâche en format AAAA-MM-JJ (pas obligatoire)
         - L'humeur : type = "humeur", title = l'humeur
+
         Si la commande correspond à l'un des points mais qu'il te manque une information : type = "missinginfo"
         Sinon : type = "error"
         `,
@@ -110,9 +119,12 @@ app.post('/iarequest', async (req, res) => {
               },
               value: {
                 type: ["string", "null"]
+              },
+              date: {
+                type: ["string", "null"]
               }
             },
-            required: ["type","title","value"],
+            required: ["type","title","value","date"],
             additionalProperties: false
           }
         }
@@ -135,7 +147,7 @@ app.post('/iarequest', async (req, res) => {
         }
       } else if (command.type == "createtask") {
         try {
-          const result = await pool.query(`INSERT INTO task (title,description) VALUES ($1,$2) RETURNING *;`,[command.title,command.value]);
+          const result = await pool.query(`INSERT INTO task (title,description,limit_date) VALUES ($1,$2,$3) RETURNING *;`,[command.title,command.value,command.date]);
           console.log("creation d'une tâche")
           if (result.rows.length === 0) return res.status(500).json({ message: 'Error while creating new task.' });
           res.json(result.rows[0]);
@@ -183,6 +195,23 @@ app.get('/task', async (req, res) => {
     const tasks = result.rows;
 
     res.json(tasks);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
+
+app.post('/taskstate', async (req, res) => {
+  try {
+    const { taskId, state } = req.body;
+
+    const result = await pool.query(`UPDATE task SET state = $1 WHERE id = $2 RETURNING *;`,[state,taskId]);
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ message: 'Task not found.' });
+    }
+
+    res.json(result.rows[0]);
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');
