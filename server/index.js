@@ -120,7 +120,7 @@ app.post('/iarequest', async (req, res) => {
             properties: {
               type: {
                 type: "string",
-                enum: ["createuser","createtask","updatetask","humeur","missinginfo","error"]
+                enum: ["createuser","createtask","deletetask","updatetask","humeur","missinginfo","error"]
               },
               title: {
                 type: ["string", "null"]
