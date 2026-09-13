@@ -93,14 +93,17 @@ app.post('/iarequest', async (req, res) => {
           title = le nom de l'utilisateur
         - L'ajout d'une tâche :
           type = "createtask"
-          title = le nom de la tâche très concis en moins de 3 mots et toujours avec une majuscule au début
-          description = la description de la tâche précise
-          value = le nombre de points gagnés en terminant cette tâche entre 1 et 1000 : à toi de juger en fonction du temps estimé pour la tâche, sa difficulté et ses contraintes
+          title = le nom de la tâche très concis en moins de 3 mots et toujours avec une majuscule au début (n'hésite pas à utiliser des abréviations)
+          description = la description de la tâche (n'invente pas de détails inutiles ou non demandés) (pas obligatoire)
+          value = le nombre de points gagnés en terminant cette tâche entre 1 et 1000 : à toi de juger le gain s'il n'est pas donné, en fonction des contraintes de la tâche. au plus la tâche est difficile et chronophage, au plus elle rapporte de points.
           date = la date limite de la tâche en format AAAA-MM-JJ (pas obligatoire)
         - Le changement d'état d'une tâche :
           type = "updatetask"
-          title = le nom de la tâche très concis en moins de 3 mots et toujours avec une majuscule au début
+          title = le nom de la tâche très concis en moins de 3 mots et toujours avec une majuscule au début (n'hésite pas à utiliser des abréviations)
           value = l'état de la tâche : 0 pour "à faire", 1 pour "prochaine tâche", 2 pour "terminée"
+        - La suppression d'une tâche (seulement si l'idée de suppression est bien explicite, pas si la tâche est simplement terminée) :
+          type = "deletetask"
+          title = le nom de la tâche donné mot pour mot avec une majuscule au début
         - L'humeur : type = "humeur", title = l'humeur
 
         Si la commande correspond à l'un des points mais qu'il te manque une information : type = "missinginfo"
@@ -166,6 +169,15 @@ app.post('/iarequest', async (req, res) => {
         try {
           const result = await pool.query(`UPDATE task SET state = $1 WHERE title = $2 RETURNING *;`,[command.value,command.title]);
           if (result.rows.length === 0) {return res.status(404).json({ message: 'Error while updating task.' });}
+          res.json(result.rows[0]);
+        } catch (err) {
+          console.error(err.message);
+          res.status(500).send('Server Error');
+        }
+      } else if (command.type == "deletetask") {
+        try {
+          const result = await pool.query(`DELETE FROM task WHERE title = $1 RETURNING *;`,[command.title]);
+          if (result.rows.length === 0) {return res.status(404).json({ message: 'Error while deleting task.' });}
           res.json(result.rows[0]);
         } catch (err) {
           console.error(err.message);
