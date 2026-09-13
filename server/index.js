@@ -93,9 +93,14 @@ app.post('/iarequest', async (req, res) => {
           title = le nom de l'utilisateur
         - L'ajout d'une tâche :
           type = "createtask"
-          title = le nom de la tâche très concis en moins de 3 mots
-          value = la description de la tâche précise
+          title = le nom de la tâche très concis en moins de 3 mots et toujours avec une majuscule au début
+          description = la description de la tâche précise
+          value = le nombre de points gagnés en terminant cette tâche entre 1 et 1000 : à toi de juger en fonction du temps estimé pour la tâche, sa difficulté et ses contraintes
           date = la date limite de la tâche en format AAAA-MM-JJ (pas obligatoire)
+        - Le changement d'état d'une tâche :
+          type = "updatetask"
+          title = le nom de la tâche très concis en moins de 3 mots et toujours avec une majuscule au début
+          value = l'état de la tâche : 0 pour "à faire", 1 pour "prochaine tâche", 2 pour "terminée"
         - L'humeur : type = "humeur", title = l'humeur
 
         Si la commande correspond à l'un des points mais qu'il te manque une information : type = "missinginfo"
@@ -112,9 +117,12 @@ app.post('/iarequest', async (req, res) => {
             properties: {
               type: {
                 type: "string",
-                enum: ["createuser","createtask","humeur","missinginfo","error"]
+                enum: ["createuser","createtask","updatetask","humeur","missinginfo","error"]
               },
               title: {
+                type: ["string", "null"]
+              },
+              description: {
                 type: ["string", "null"]
               },
               value: {
@@ -124,7 +132,7 @@ app.post('/iarequest', async (req, res) => {
                 type: ["string", "null"]
               }
             },
-            required: ["type","title","value","date"],
+            required: ["type","title","description","value","date"],
             additionalProperties: false
           }
         }
@@ -147,9 +155,17 @@ app.post('/iarequest', async (req, res) => {
         }
       } else if (command.type == "createtask") {
         try {
-          const result = await pool.query(`INSERT INTO task (title,description,limit_date) VALUES ($1,$2,$3) RETURNING *;`,[command.title,command.value,command.date]);
-          console.log("creation d'une tâche")
+          const result = await pool.query(`INSERT INTO task (title,description,reward,limit_date) VALUES ($1,$2,$3,$4) RETURNING *;`,[command.title,command.description,parseInt(command.value),command.date]);
           if (result.rows.length === 0) return res.status(500).json({ message: 'Error while creating new task.' });
+          res.json(result.rows[0]);
+        } catch (err) {
+          console.error(err.message);
+          res.status(500).send('Server Error');
+        }
+      } else if (command.type == "updatetask") {
+        try {
+          const result = await pool.query(`UPDATE task SET state = $1 WHERE title = $2 RETURNING *;`,[command.value,command.title]);
+          if (result.rows.length === 0) {return res.status(404).json({ message: 'Error while updating task.' });}
           res.json(result.rows[0]);
         } catch (err) {
           console.error(err.message);

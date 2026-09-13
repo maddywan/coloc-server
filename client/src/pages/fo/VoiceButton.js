@@ -72,7 +72,7 @@ function VoiceButton({ onFinished }) {
         recognition.start();
   };
 
-  const writeMode = async() => {
+  /*const writeMode = async() => {
     setListening(true);
     setProcessing(false);
     const text = window.prompt("Commande :");
@@ -96,11 +96,11 @@ function VoiceButton({ onFinished }) {
     setProcessing(false);
     setListening(false);
     onFinished();
-  }
+  }*/
 
   return (
     <>
-        <button onClick={writeMode}
+        <button onClick={startRecognition}
             className={`voice-button ${
                     listening ? "listening" : ""
                 } ${processing ? "processing" : ""}`}

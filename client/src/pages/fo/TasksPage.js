@@ -6,7 +6,7 @@ import { useState } from 'react';
 
 const TasksPage = ({ tasks, setTasks, fetchTasks }) => {
   const [activeTask, setActiveTask] = useState(null);
-  const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 8 } }));
+  const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { delay: 100, tolerance: 5 } }));
 
   const handleDragStart = ({ active }) => {
     setActiveTask(tasks.find(task => task.id === Number(active.id)));
