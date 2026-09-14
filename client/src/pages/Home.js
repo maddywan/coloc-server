@@ -1,10 +1,10 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import '../styles.css';
+import './styles.css';
 import { Smile, Users, ReceiptText, Speaker, ScrollText, Settings } from 'lucide-react';
 //import { useNavigate } from "react-router-dom";
 import UsersPage from './UsersPage';
 import VoiceButton from "./VoiceButton";
-import TasksPage from './TasksPage';
+import TasksPage from './Tasks/TasksPage';
 import SettingsPage from './SettingsPage';
 
 const Home = () => {

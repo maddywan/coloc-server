@@ -1,4 +1,4 @@
-import '../styles.css';
+import './styles.css';
 import { Trash2 } from 'lucide-react';
 
 const UsersPage = ({ users }) => {

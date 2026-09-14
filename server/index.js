@@ -231,9 +231,9 @@ app.get('/task', async (req, res) => {
 
 app.post('/taskstate', async (req, res) => {
   try {
-    const { taskId, state } = req.body;
+    const { taskId, state, winner, finishedDate } = req.body;
 
-    const result = await pool.query(`UPDATE task SET state = $1 WHERE id = $2 RETURNING *;`,[state,taskId]);
+    const result = await pool.query(`UPDATE task SET state = $1, winner = $2, finished_date = $3 WHERE id = $4 RETURNING *;`,[state,winner,finishedDate,taskId])
 
     if (result.rows.length === 0) {
       return res.status(404).json({ message: 'Task not found.' });

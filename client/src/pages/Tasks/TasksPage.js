@@ -1,6 +1,6 @@
 import '../styles.css';
 import { DndContext, DragOverlay, PointerSensor, useSensor, useSensors } from "@dnd-kit/core";
-import KanbanColumn from './KanbanColumn';
+import KanbanContent from './KanbanContent';
 import KanbanItem from './KanbanItem';
 import { useState } from 'react';
 
@@ -19,15 +19,25 @@ const TasksPage = ({ tasks, setTasks, fetchTasks }) => {
     const taskId = Number(active.id);
     const newState = Number(over.id);
 
+    let winner = "";
+    let finishedDate = null;
+    if (newState === 2) {
+      winner = "Maddy";
+      finishedDate = new Date();
+    } else if (newState === 3) {  
+      winner = "Mathis";
+      finishedDate = new Date();
+    }
+
     setTasks(currentTasks => currentTasks.map(task =>
-      task.id === taskId ? { ...task, state: newState } : task
+      task.id === taskId ? { ...task, state: newState, winner: winner, finishedDate: finishedDate } : task
     ));
 
     try {
       const response = await fetch(`/taskstate`, {
         method: 'POST',
         headers: {'Content-Type': 'application/json',},
-        body: JSON.stringify({taskId:taskId,state:newState}),
+        body: JSON.stringify({taskId:taskId,state:newState,winner:winner,finishedDate:finishedDate}),
       });
       if (!response.ok) alert('Failed to change task state.');
     } catch (error) {
@@ -42,9 +52,20 @@ const TasksPage = ({ tasks, setTasks, fetchTasks }) => {
       <h2>Tâches</h2>
       <DndContext sensors={sensors} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
         <div className="kanban">
-          <KanbanColumn color="#64a0d259" state={0} title="À faire" tasks={tasks} />
-          <KanbanColumn color="#d264c359" state={1} title="Prochaines tâches" tasks={tasks} />
-          <KanbanColumn color="#6bd26459" state={2} title="Terminées" tasks={tasks} />
+          <div className="kanban-column">
+            <div className="kanban-column-title">À faire</div>
+            <KanbanContent color="#64a0d259" state={0} tasks={tasks} />
+          </div>
+          <div className="kanban-column">
+            <div className="kanban-column-title">Prochaines tâches</div>
+            <KanbanContent color="#d264c359" state={1} tasks={tasks} />
+          </div>
+          <div className="kanban-column">
+            <div className="kanban-column-title">Fait par Maddy</div>
+            <KanbanContent color="#6bd26459" state={2} tasks={tasks} double={true} />
+            <div className="kanban-column-title">Fait par Mathis</div>
+            <KanbanContent color="#6bd26459" state={3} tasks={tasks} double={true} />
+          </div>
         </div>
 
         <DragOverlay>

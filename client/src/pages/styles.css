@@ -291,12 +291,27 @@ h2 {
     padding: 5px;
 }
 
-.kanban-item-limit-date {
-    background: rgb(120, 33, 33);
-    padding: 0 6px 0 4px;
+.kanban-item-date {
+    background: rgb(108, 108, 108);
+    padding: 0 6px 1px 4px;
     border-radius: 5px;
     color: white;
     width: fit-content;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.kanban-item-date.green {
+    background: rgb(64, 120, 33);
+}
+
+.kanban-item-date.orange {
+    background: rgb(120, 87, 33);
+}
+
+.kanban-item-date.red {
+    background: rgb(120, 33, 33);
 }
 
 .kanban-item:active {

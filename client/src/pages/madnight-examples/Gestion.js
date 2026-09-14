@@ -8,7 +8,7 @@ import BoStockModal from './BoStockModal';
 import BoCustomModal from './BoCustomModal';
 import BoUserModal from './BoUserModal';
 import { Trash2, ArrowLeftCircle, Check, Loader, PlusCircle, X, Martini, Box, Users, ScrollText, ReceiptText, ChartNoAxesCombined, ArrowBigLeft, ArrowBigRight } from 'lucide-react';
-import '../styles.css';
+import './styles.css';
 import CocktailEditor from './CocktailEditor';
 import BoCocktailFo from './BoCocktailFo';
 
