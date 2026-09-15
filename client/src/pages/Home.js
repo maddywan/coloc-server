@@ -6,11 +6,13 @@ import UsersPage from './UsersPage';
 import VoiceButton from "./VoiceButton";
 import TasksPage from './Tasks/TasksPage';
 import SettingsPage from './SettingsPage';
+import PurchasesPage from './Purchases/PurchasesPage';
 
 const Home = () => {
   /* DATABASE */
 
   const [tasks, setTasks] = useState([]);
+  const [purchases, setPurchases] = useState([]);
   const [users, setUsers] = useState([]);
 
   const fetchTasks = useCallback(() => {
@@ -20,6 +22,15 @@ const Home = () => {
         setTasks(data);
       })
       .catch((error) => console.error("Error fetching tasks:", error));
+  }, []);
+
+  const fetchPurchases = useCallback(() => {
+    fetch("/purchase")
+      .then((res) => res.json())
+      .then((data) => {
+        setPurchases(data.sort((a, b) => a.title.localeCompare(b.title)));
+      })
+      .catch((error) => console.error("Error fetching purchases:", error));
   }, []);
 
   const fetchUsers = useCallback(() => {
@@ -33,8 +44,9 @@ const Home = () => {
 
   const fetchAll = useCallback(() => {
     fetchTasks();
+    fetchPurchases();
     fetchUsers();
-  }, [fetchTasks,fetchUsers]);
+  }, [fetchTasks,fetchPurchases,fetchUsers]);
 
   useEffect(() => {
     fetchAll();
@@ -47,7 +59,7 @@ const Home = () => {
     { line: 1, name: "Tâches", icon: <ReceiptText size={30} />, pageFile: <TasksPage tasks={tasks} setTasks={setTasks} fetchTasks={fetchTasks} users={users} fetchUsers={fetchUsers} /> },
     { line: 1, name: "Colocation", icon: <Users size={30} />, pageFile: <UsersPage users={users}/> },
     { line: 2, name: "Soundboard", icon: <Speaker size={30} />, pageFile: <></> },
-    { line: 2, name: "Courses", icon: <ScrollText size={30} />, pageFile: <></> },
+    { line: 2, name: "Courses", icon: <ScrollText size={30} />, pageFile: <PurchasesPage purchases={purchases} setPurchases={setPurchases} fetchPurchases={fetchPurchases} /> },
     { line: 2, name: "Paramètres", icon: <Settings size={30} />, pageFile: <SettingsPage/> }
   ];
   const [activePage, setActivePage] = useState("Humeur");

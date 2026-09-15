@@ -86,25 +86,39 @@ app.post('/airequest', async (req, res) => {
       instructions: `
         Tu es un système d'organisation, analyse le message de l'utilisateur.
         Pour information, nous sommes le 13/09/2026 à Lille.
+        Ce système est utilisé par deux colocataires, Maddy et Mathis.
+        Fais attention, dans le message, tu verras peut-être écrit "Maddie", "Mahdi" ou "m'as dit" au lieu de "Maddy" du fait de la reconnaissance vocale qui ne connais pas ce prénom.
 
         Si la commande concerne :
-        - La création d'un profil utilisateur :
-          type = "createuser"
-          title = le nom de l'utilisateur
         - L'ajout d'une tâche :
           type = "createtask"
           title = le nom de la tâche très concis en moins de 3 mots et toujours avec une majuscule au début (n'hésite pas à utiliser des abréviations)
           description = la description de la tâche (n'invente pas de détails inutiles ou non demandés) (pas obligatoire)
           value = le nombre de points gagnés en terminant cette tâche entre 1 et 1000 : à toi de juger le gain s'il n'est pas donné, en fonction des contraintes de la tâche. au plus la tâche est difficile et chronophage, au plus elle rapporte de points.
           date = la date limite de la tâche en format AAAA-MM-JJ (pas obligatoire)
+        
         - Le changement d'état d'une tâche :
           type = "updatetask"
           title = le nom de la tâche très concis en moins de 3 mots et toujours avec une majuscule au début (n'hésite pas à utiliser des abréviations)
           value = l'état de la tâche : 0 pour "à faire", 1 pour "prochaine tâche", 2 pour "terminée"
+        
         - La suppression d'une tâche (seulement si l'idée de suppression est bien explicite, pas si la tâche est simplement terminée) :
           type = "deletetask"
           title = le nom de la tâche donné mot pour mot avec une majuscule au début
-        - L'humeur : type = "humeur", title = l'humeur
+        
+        - L'ajout d'un produit à acheter sur la liste de courses
+          type = "createpurchase"
+          title = le nom du produit à acheter avec une majuscule au début
+          value = la liste de courses si elle est précisée : 0 pour la liste "commune" ou si rien n'est précisé, 1 pour la liste de "Maddy", 2 pour la liste de "Mathis"
+
+        - Le changement de liste de courses d'un produit
+          type = "updatepurchase"
+          title = le nom du produit mot pour mot avec une majuscule au début
+          value = la liste en question : 0 pour la liste "commune", 1 pour la liste de "Maddy", 2 pour la liste de "Mathis"
+
+        - La suppression ou l'achat d'un produit de la liste de courses (acheter le produit = le supprimer de la liste)
+          type = "deletepurchase"
+          title = le nom du produit mot pour mot avec une majuscule au début
 
         Si la commande correspond à l'un des points mais qu'il te manque une information : type = "missinginfo"
         Sinon : type = "error"
@@ -120,7 +134,7 @@ app.post('/airequest', async (req, res) => {
             properties: {
               type: {
                 type: "string",
-                enum: ["createuser","createtask","deletetask","updatetask","humeur","missinginfo","error"]
+                enum: ["createtask","updatetask","deletetask","createpurchase","updatepurchase","deletepurchase","missinginfo","error"]
               },
               title: {
                 type: ["string", "null"]
@@ -145,16 +159,8 @@ app.post('/airequest', async (req, res) => {
     const command = JSON.parse(response.output_text);
 
     if (command) {
-      if (command.type == "createuser") {
-        try {
-          const result = await pool.query(`INSERT INTO "user" (name) VALUES ($1) RETURNING *;`,[command.title]);
-          if (result.rows.length === 0) return res.status(500).json({ message: 'Error while creating new user.' });
-          res.json(result.rows[0]);
-        } catch (err) {
-          console.error(err.message);
-          res.status(500).send('Server Error');
-        }
-      } else if (command.type == "createtask") {
+      /* TACHES */
+      if (command.type == "createtask") {
         try {
           const result = await pool.query(`INSERT INTO task (title,description,reward,limit_date) VALUES ($1,$2,$3,$4) RETURNING *;`,[command.title,command.description,parseInt(command.value),command.date]);
           if (result.rows.length === 0) return res.status(500).json({ message: 'Error while creating new task.' });
@@ -176,6 +182,34 @@ app.post('/airequest', async (req, res) => {
         try {
           const result = await pool.query(`DELETE FROM task WHERE title = $1 RETURNING *;`,[command.title]);
           if (result.rows.length === 0) return res.status(500).json({ message: 'Error while deleting task.' });
+          res.json(result.rows[0]);
+        } catch (err) {
+          console.error(err.message);
+          res.status(500).send('Server Error');
+        }
+      /* LISTE DE COURSES */
+      } else if (command.type == "createpurchase") {
+        try {
+          const result = await pool.query(`INSERT INTO purchase (title,list) VALUES ($1,$2) RETURNING *;`,[command.title,parseInt(command.value)]);
+          if (result.rows.length === 0) return res.status(500).json({ message: 'Error while creating new purchase.' });
+          res.json(result.rows[0]);
+        } catch (err) {
+          console.error(err.message);
+          res.status(500).send('Server Error');
+        }
+      } else if (command.type == "updatepurchase") {
+        try {
+          const result = await pool.query(`UPDATE purchase SET list = $1 WHERE title = $2 RETURNING *;`,[command.value,command.title]);
+          if (result.rows.length === 0) return res.status(500).json({ message: 'Error while updating purchase.' });
+          res.json(result.rows[0]);
+        } catch (err) {
+          console.error(err.message);
+          res.status(500).send('Server Error');
+        }
+      } else if (command.type == "deletepurchase") {
+        try {
+          const result = await pool.query(`DELETE FROM purchase WHERE title = $1 RETURNING *;`,[command.title]);
+          if (result.rows.length === 0) return res.status(500).json({ message: 'Error while deleting purchase.' });
           res.json(result.rows[0]);
         } catch (err) {
           console.error(err.message);
@@ -258,6 +292,68 @@ app.post('/taskstate', async (req, res) => {
     }
 
     res.json(task);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
+
+// Purchases
+app.get('/purchase', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT * FROM purchase');
+
+    const purchases = result.rows;
+
+    res.json(purchases);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
+
+app.post('/purchase', async (req, res) => {
+  try {
+    const { purchaseId, title } = req.body;
+
+    if (purchaseId === -1) {
+      const result = await pool.query('INSERT INTO purchase (title) VALUES ($1) RETURNING *;',[title]);
+      const purchases = result.rows;
+      res.json(purchases);
+    } else {
+      const result = await pool.query('UPDATE purchase SET title = $1 WHERE id = $2 RETURNING *;',[title,purchaseId]);
+      const purchases = result.rows;
+      res.json(purchases);
+    }
+
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
+
+app.post('/purchaselist', async (req, res) => {
+  try {
+    const { purchaseId, list } = req.body;
+    const purchaseResult = await pool.query(`UPDATE purchase SET list = $1 WHERE id = $2 RETURNING *;`,[list,purchaseId])
+
+    if (purchaseResult.rows.length === 0) return res.status(500).json({ message: 'Purchase not found.' });
+
+    res.json(purchaseResult.rows[0]);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
+
+app.post('/deletepurchase', async (req, res) => {
+  try {
+    const { purchaseId } = req.body;
+    const purchaseResult = await pool.query(`DELETE FROM purchase WHERE id = $1 RETURNING *;`,[purchaseId])
+
+    if (purchaseResult.rows.length === 0) return res.status(500).json({ message: 'Purchase not found.' });
+
+    res.json(purchaseResult.rows[0]);
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');

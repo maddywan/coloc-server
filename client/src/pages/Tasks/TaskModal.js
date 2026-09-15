@@ -17,7 +17,7 @@ const TaskModal = ({ isOpen, onRequestClose, task }) => {
   
   if (!isOpen) return null;
 
-  const handleSaveTask = async (username) => {
+  const handleSaveTask = async () => {
     try {
       const response = await fetch(`/task`, {
         method: 'POST',
