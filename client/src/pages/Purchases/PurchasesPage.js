@@ -90,11 +90,9 @@ const PurchasesPage = ({ purchases, setPurchases, fetchPurchases }) => {
               <div className="kanban-column-title">Maddy</div>
               <PurchaseContent color="#d2646459" list={1} purchases={purchases} openPurchaseModal={openPurchaseModal} deletePurchase={deletePurchase} />
           </div>
-          <div className="kanban-column-double">
-            <div className="kanban-column">
-              <div className="kanban-column-title">Mathis</div>
-              <PurchaseContent color="#647ed259" list={2} purchases={purchases} openPurchaseModal={openPurchaseModal} deletePurchase={deletePurchase} />
-            </div>
+          <div className="kanban-column">
+            <div className="kanban-column-title">Mathis</div>
+            <PurchaseContent color="#647ed259" list={2} purchases={purchases} openPurchaseModal={openPurchaseModal} deletePurchase={deletePurchase} />
           </div>
         </div>
 
