@@ -8,11 +8,6 @@ import TasksPage from './Tasks/TasksPage';
 import SettingsPage from './SettingsPage';
 
 const Home = () => {
-
-  /* NAVIGATION */
-
-  
-
   /* DATABASE */
 
   const [tasks, setTasks] = useState([]);
@@ -45,9 +40,11 @@ const Home = () => {
     fetchAll();
   }, [fetchAll]);
 
+  /* NAVIGATION */
+
   const pages = [
     { line: 1, name: "Humeur", icon: <Smile size={30} />, pageFile: <></> },
-    { line: 1, name: "Tâches", icon: <ReceiptText size={30} />, pageFile: <TasksPage tasks={tasks} setTasks={setTasks} fetchTasks={fetchTasks}/> },
+    { line: 1, name: "Tâches", icon: <ReceiptText size={30} />, pageFile: <TasksPage tasks={tasks} setTasks={setTasks} fetchTasks={fetchTasks} users={users} fetchUsers={fetchUsers} /> },
     { line: 1, name: "Colocation", icon: <Users size={30} />, pageFile: <UsersPage users={users}/> },
     { line: 2, name: "Soundboard", icon: <Speaker size={30} />, pageFile: <></> },
     { line: 2, name: "Courses", icon: <ScrollText size={30} />, pageFile: <></> },

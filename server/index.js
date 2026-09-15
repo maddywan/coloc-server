@@ -71,7 +71,7 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAIKEY
 });
 
-app.post('/iarequest', async (req, res) => {
+app.post('/airequest', async (req, res) => {
   try {
     const { message } = req.body;
 
@@ -143,13 +143,11 @@ app.post('/iarequest', async (req, res) => {
     });
 
     const command = JSON.parse(response.output_text);
-    console.log(command);
 
     if (command) {
       if (command.type == "createuser") {
         try {
           const result = await pool.query(`INSERT INTO "user" (name) VALUES ($1) RETURNING *;`,[command.title]);
-          console.log("creation de l'utilisateur")
           if (result.rows.length === 0) return res.status(500).json({ message: 'Error while creating new user.' });
           res.json(result.rows[0]);
         } catch (err) {
@@ -168,7 +166,7 @@ app.post('/iarequest', async (req, res) => {
       } else if (command.type == "updatetask") {
         try {
           const result = await pool.query(`UPDATE task SET state = $1 WHERE title = $2 RETURNING *;`,[command.value,command.title]);
-          if (result.rows.length === 0) {return res.status(404).json({ message: 'Error while updating task.' });}
+          if (result.rows.length === 0) return res.status(500).json({ message: 'Error while updating task.' });
           res.json(result.rows[0]);
         } catch (err) {
           console.error(err.message);
@@ -177,7 +175,7 @@ app.post('/iarequest', async (req, res) => {
       } else if (command.type == "deletetask") {
         try {
           const result = await pool.query(`DELETE FROM task WHERE title = $1 RETURNING *;`,[command.title]);
-          if (result.rows.length === 0) {return res.status(404).json({ message: 'Error while deleting task.' });}
+          if (result.rows.length === 0) return res.status(500).json({ message: 'Error while deleting task.' });
           res.json(result.rows[0]);
         } catch (err) {
           console.error(err.message);
@@ -229,17 +227,37 @@ app.get('/task', async (req, res) => {
   }
 });
 
+app.post('/task', async (req, res) => {
+  try {
+    const { taskId, title, description, reward } = req.body;
+
+    const result = await pool.query('UPDATE task SET title = $1, description = $2, reward = $3 WHERE id = $4 RETURNING *;',[title,description,reward,taskId]);
+
+    const tasks = result.rows;
+
+    res.json(tasks);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
+
 app.post('/taskstate', async (req, res) => {
   try {
     const { taskId, state, winner, finishedDate } = req.body;
+    const taskresult = await pool.query(`UPDATE task SET state = $1, winner = $2, finished_date = $3 WHERE id = $4 RETURNING *;`,[state,winner,finishedDate,taskId])
 
-    const result = await pool.query(`UPDATE task SET state = $1, winner = $2, finished_date = $3 WHERE id = $4 RETURNING *;`,[state,winner,finishedDate,taskId])
+    if (taskresult.rows.length === 0) return res.status(500).json({ message: 'Task not found.' });
+    const task = taskresult.rows[0];
 
-    if (result.rows.length === 0) {
-      return res.status(404).json({ message: 'Task not found.' });
+    if (state >= 2) {
+      const historyresult = await pool.query(`INSERT INTO taskhistory (title,reward,finished_date,winner) VALUES ($1,$2,$3,$4) RETURNING *;`,[task.title,task.reward,finishedDate,winner]);
+      if (historyresult.rows.length === 0) return res.status(500).json({ message: 'Error while creating task history.' });
+      const userresult = await pool.query(`UPDATE "user" SET points = points + $1 WHERE name = $2 RETURNING *;`,[task.reward,winner])
+      if (userresult.rows.length === 0) return res.status(500).json({ message: 'User not found.' });
     }
 
-    res.json(result.rows[0]);
+    res.json(task);
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');
