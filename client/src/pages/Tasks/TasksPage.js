@@ -54,14 +54,14 @@ const TasksPage = ({ tasks, setTasks, fetchTasks, users, fetchUsers }) => {
     /* DATABASE */
 
     setTasks(currentTasks => currentTasks.map(task =>
-      task.id === taskId ? { ...task, state:newState, winner:winner, finishedDate:finishedDate } : task
+      task.id === taskId ? { ...task, state:newState, winner, finishedDate } : task
     ));
 
     try {
       const response = await fetch(`/taskstate`, {
         method: 'POST',
         headers: {'Content-Type': 'application/json',},
-        body: JSON.stringify({taskId:taskId, state:newState, winner:winner, finishedDate:finishedDate}),
+        body: JSON.stringify({taskId:taskId, state:newState, winner, finishedDate}),
       });
       if (!response.ok) alert('Failed to change task state.');
     } catch (error) {
@@ -109,6 +109,8 @@ const TasksPage = ({ tasks, setTasks, fetchTasks, users, fetchUsers }) => {
         onRequestClose={closeTaskModal}
         task={selectedTask}
       />
+
+      <button className="overlay-button" onClick={()=>{openTaskModal({id:-1,title:"",description:"",reward:10,limit_date:null,period:0})}}>+ Ajouter une tâche</button>
     </div>
   );
 };

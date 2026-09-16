@@ -45,7 +45,7 @@ const PurchaseModal = ({ isOpen, onRequestClose, purchase }) => {
       className="modal text-left"
       overlayClassName="modal-overlay"
     >
-        <h2 className='text-center' style={{marginBlockStart:'0'}}>Modifier le produit</h2>
+        <h2 className='text-center' style={{marginBlockStart:'0'}}>{purchase.id===-1?"Ajouter un produit":"Modifier le produit"}</h2>
         <br/>
         
         <span>Titre</span>

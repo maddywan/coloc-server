@@ -19,7 +19,27 @@ const Home = () => {
     fetch("/task")
       .then((res) => res.json())
       .then((data) => {
-        setTasks(data);
+        setTasks([...data].sort((a, b) => {
+          const aFinished = a.finished_date !== null;
+          const bFinished = b.finished_date !== null;
+          const aHasDate = a.limit_date !== null;
+          const bHasDate = b.limit_date !== null;
+
+          if (aFinished !== bFinished) return aFinished ? 1 : -1;
+          else if (aFinished && bFinished) {
+            const dateDiff = new Date(b.finished_date).getTime() - new Date(a.finished_date).getTime();
+            if (dateDiff !== 0) return dateDiff;
+            return Number(b.reward) - Number(a.reward);
+          }
+          
+          if (aHasDate !== bHasDate) return aHasDate ? -1 : 1;
+          else if (aHasDate && bHasDate) {
+            const dateDiff = new Date(a.limit_date).getTime() - new Date(b.limit_date).getTime();
+            if (dateDiff !== 0) return dateDiff;
+          }
+          
+          return Number(a.reward) - Number(b.reward);
+        }));
       })
       .catch((error) => console.error("Error fetching tasks:", error));
   }, []);
