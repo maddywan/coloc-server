@@ -1,4 +1,4 @@
-import { ArrowLeft, Save, Trash2 } from 'lucide-react';
+import { ArrowLeft, Save, Split, Trash2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import Modal from 'react-modal';
 
@@ -68,7 +68,7 @@ const TaskModal = ({ isOpen, onRequestClose, task }) => {
   };
 
   const handleDeleteTask = async () => {
-try {
+    try {
       const response = await fetch(`/deletetask`, {
         method: 'POST',
         headers: {
@@ -85,6 +85,27 @@ try {
     } catch (error) {
       console.error('Error with /deletetask endpoint.', error);
       alert('Error with /deletetask endpoint.');
+    }
+  }
+
+  const handleSplitTask = async () => {
+    try {
+      const response = await fetch(`/splittask`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({taskId:task.id,reward:task.reward}),
+      });
+
+      if (response.ok) {
+        onRequestClose();
+      } else {
+        alert(`Error with /splittask endpoint.`);
+      }
+    } catch (error) {
+      console.error('Error with /splittask endpoint.', error);
+      alert('Error with /splittask endpoint.');
     }
   }
 
@@ -117,7 +138,10 @@ try {
         <br/>
 
         <h3 onClick={handleSaveTask} className='modal-button btn-success'><Save/>Sauvegarder</h3>
-        {task.id>-1?<h3 onClick={handleDeleteTask} className='modal-button btn-danger'><Trash2/>Supprimer</h3>:''}
+        {task.id>-1?<>
+          <h3 onClick={handleDeleteTask} className='modal-button btn-danger'><Trash2/>Supprimer</h3>
+          <h3 onClick={handleSplitTask} className='modal-button btn-blue'><Split/>Spliter en 2</h3>
+        </>:''}
         <h3 onClick={onRequestClose} className='modal-button btn-info'><ArrowLeft/>Retour</h3>
     </Modal>
   );

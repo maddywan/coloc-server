@@ -4,6 +4,7 @@
     --success: #3A5C;
     --danger: #C33C;
     --info: #80808080;
+    --blue: #349C;
     --text: white;
     --text-soft: #999;
     --background: black;
@@ -141,7 +142,7 @@ h2 {
 
 /* Buttons */
 
-.btn-success, .btn-danger, .btn-info {
+.btn-success, .btn-danger, .btn-info, .btn-blue {
     border: 1px white solid;
     border-radius: 10px;
     color: var(--text);
@@ -154,7 +155,7 @@ h2 {
     cursor: pointer;
 }
 
-.btn-success:disabled, .btn-danger:disabled, .btn-info:disabled {
+.btn-success:disabled, .btn-danger:disabled, .btn-info:disabled, .btn-blue:dsabled {
     color: var(--text-soft);
     border: 1px var(--text-soft) solid;
     opacity: 0;
@@ -170,6 +171,10 @@ h2 {
 
 .btn-info {
     background-color: var(--info);
+}
+
+.btn-blue {
+    background-color: var(--blue);
 }
 
 .btn-big {

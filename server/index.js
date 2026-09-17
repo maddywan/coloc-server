@@ -326,6 +326,24 @@ app.post('/deletetask', async (req, res) => {
   }
 });
 
+app.post('/splittask', async (req, res) => {
+  try {
+    const { taskId, reward } = req.body;
+    
+    const task1result = await pool.query('UPDATE task SET reward = $1 WHERE id = $2 RETURNING *;',[Math.round(reward/2),taskId]);
+    if (task1result.rows.length === 0) return res.status(500).json({ message: 'Task not found.' });
+    const task1 = task1result.rows[0];
+
+    const task2result = await pool.query('INSERT INTO task (title,description,reward,limit_date,period,state) VALUES ($1,$2,$3,$4,$5,$6) RETURNING *;',[task1.title,task1.description,Math.round(reward/2),task1.limit_date,task1.period,task1.state]);
+    if (task2result.length === 0) return res.status(500).json({ message: 'Error while copying task.' });
+
+    res.json(task2result.rows[0]);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
+
 // Purchases
 app.get('/purchase', async (req, res) => {
   try {
