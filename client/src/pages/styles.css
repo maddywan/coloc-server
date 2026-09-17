@@ -143,6 +143,7 @@ h2 {
 
 .btn-success, .btn-danger, .btn-info {
     border: 1px white solid;
+    border-radius: 10px;
     color: var(--text);
     margin: 10px;
     display: flex;
@@ -306,8 +307,11 @@ h2 {
     background-color: #FFFFFF77;
     border-radius: 0 0 10px 10px;
     margin: 0px 10px 10px 10px;
-    padding: 0 5px 5px 5px;
+    padding: 5px;
     cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
 }
 
 .kanban-item.horizontal {
@@ -363,7 +367,6 @@ h2 {
 .kanban-item-description {
     font-style: italic;
     color: rgba(0, 0, 0, 0.7);
-    padding: 5px 0 0 0;
 }
 
 .kanban-item-date {
@@ -375,7 +378,6 @@ h2 {
     display: flex;
     align-items: center;
     gap: 4px;
-    margin-top: 5px;
 }
 
 .kanban-item-date.green {
@@ -392,8 +394,7 @@ h2 {
 
 .kanban-item-period {
     font-size: 15px;
-    color: rgb(120, 33, 33);
-    margin-bottom: -3px;
+    color: rgba(0, 0, 0, 0.7);
 }
 
 .drag-over {
@@ -436,6 +437,7 @@ h2 {
     width: 50px;
     height: 28px;
     outline: none;
+    border-radius: 14px;
     transition: background-color 0.3s;
     background-color: var(--background-soft) !important;
     border: solid 1px white !important;
@@ -452,6 +454,7 @@ h2 {
     left: 2px;
     width: 22px;
     height: 22px;
+    border-radius: 14px;
     background-color: white;
     border-width: 0px;
     transition: transform 0.3s, background-color 0.3s;
@@ -688,9 +691,10 @@ h2 {
 
 .modal-button, .text-input {
     text-align: left;
+    border-radius: 10px;
     margin-block-start: 0;
     margin-block-end: 0;
-    margin: 10px 5%;
+    margin: 5px 5%;
     cursor: pointer;
     border: 1px solid var(--text);
     padding: 3px 0;

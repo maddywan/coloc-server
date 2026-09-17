@@ -32,6 +32,8 @@ const TaskModal = ({ isOpen, onRequestClose, task }) => {
     else if (days === 21) setPeriodText("Toutes les 3 semaines");
     else if (days === 28) setPeriodText("Toutes les 4 semaines");
     else if (days === 30) setPeriodText("Mensuel");
+    else if (days === 60) setPeriodText("Bimestriel");
+    else if (days === 90) setPeriodText("Trimestriel");
     else setPeriodText("Tous les "+periodValue+" jours");
   }
   
