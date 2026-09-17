@@ -267,8 +267,8 @@ app.post('/task', async (req, res) => {
     
     if (taskId === -1) {
       const result = await pool.query('INSERT INTO task (title,description,reward,limit_date,period) VALUES ($1,$2,$3,$4,$5) RETURNING *;',[title,description,reward,limitDate,period]);
-      const purchases = result.rows;
-      res.json(purchases);
+      const tasks = result.rows;
+      res.json(tasks);
     } else {
       const result = await pool.query('UPDATE task SET title = $1, description = $2, reward = $3, limit_date = $4, period = $5 WHERE id = $6 RETURNING *;',[title,description,reward,limitDate,period,taskId]);
       const tasks = result.rows;
@@ -289,12 +289,22 @@ app.post('/taskstate', async (req, res) => {
     const task = taskresult.rows[0];
 
     if (state >= 2) {
+      // Add to history
       const historyresult = await pool.query(`INSERT INTO taskhistory (title,reward,finished_date,winner) VALUES ($1,$2,$3,$4) RETURNING *;`,[task.title,task.reward,finishedDate,winner]);
       if (historyresult.rows.length === 0) return res.status(500).json({ message: 'Error while creating task history.' });
+      
+      // Give reward
       const userresult = await pool.query(`UPDATE "user" SET points = points + $1 WHERE name = $2 RETURNING *;`,[task.reward,winner])
       if (userresult.rows.length === 0) return res.status(500).json({ message: 'User not found.' });
-    }
 
+      // Duplicate periodic tasks
+      if (!!task.limit_date && task.period > 0) {
+        const newLimitDate = new Date();
+        newLimitDate.setDate(newLimitDate.getDate() + task.period + 1);
+        const newtaskresult = await pool.query('INSERT INTO task (title,description,reward,limit_date,period) VALUES ($1,$2,$3,$4,$5) RETURNING *;',[task.title,task.description,task.reward,newLimitDate.toISOString(),task.period]);
+        if (newtaskresult.rows.length === 0) return res.status(500).json({ message: 'Error while copying task.' });
+      }
+    }
     res.json(task);
   } catch (err) {
     console.error(err.message);
