@@ -32,7 +32,7 @@ const Home = () => {
             return Number(b.reward) - Number(a.reward);
           }
           
-          if (aHasDate !== bHasDate) return aHasDate ? -1 : 1;
+          if (aHasDate !== bHasDate) return aHasDate ? 1 : -1;
           else if (aHasDate && bHasDate) {
             const dateDiff = new Date(a.limit_date).getTime() - new Date(b.limit_date).getTime();
             if (dateDiff !== 0) return dateDiff;

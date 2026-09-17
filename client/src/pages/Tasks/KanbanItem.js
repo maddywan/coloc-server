@@ -27,7 +27,11 @@ const KanbanItem = ({ task, openTaskModal, blockDrag=false }) => {
     return (
         <div ref={setNodeRef}>
             <div className="kanban-item top" {...(blockDrag?{}:listeners)} {...attributes} style={{cursor:blockDrag?'not-allowed':'',touchAction:blockDrag?'':'none'}}>
-                <span className="kanban-item-reward">{task.reward}🪙</span> <span className="kanban-item-title">{task.title}</span>
+                <div style={{display: "flex", gap: "5px"}}>
+                    <div className="kanban-item-title">{task.title}</div>
+                    {task.reward>0?<span className="kanban-item-reward">{task.reward}🪙</span>:''}
+                </div>
+                {task.label?<div className="kanban-item-label">#{task.label}</div>:''}
             </div>
             <div className="kanban-item bottom" onClick={blockDrag?()=>{}:handleEdit} style={{cursor:blockDrag?'not-allowed':''}}>
                 {task.description?<div className="kanban-item-description">{task.description}</div>:''}

@@ -8,18 +8,20 @@ const TaskModal = ({ isOpen, onRequestClose, task }) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [reward, setReward] = useState(0);
+  const [enableDate, setEnableDate] = useState(false);
   const [limitDate, setLimitDate] = useState(null);
   const [period, setPeriod] = useState(0);
-  const [enableDate, setEnableDate] = useState(false);
   const [periodText, setPeriodText] = useState("Unique");
+  const [label, setLabel] = useState("");
 
   useEffect(() => {
     setTitle(task?task.title:"");
     setDescription(task?task.description:"");
     setReward(task?task.reward:"");
+    setEnableDate(task?task.limit_date!==null:"");
     setLimitDate(task?(task.limit_date?new Date(task.limit_date).toLocaleDateString("en-CA"):new Date().toLocaleDateString("en-CA")):"");
     handlePeriodChange(task?task.period:"");
-    setEnableDate(task?task.limit_date!==null:"");
+    setLabel(task?task.label:"");
   },[task]);
 
   const handlePeriodChange = (periodValue) => {
@@ -50,9 +52,10 @@ const TaskModal = ({ isOpen, onRequestClose, task }) => {
           taskId:task?task.id:-1,
           title,
           description,
-          reward:(reward?parseInt(reward):0),
+          reward:(reward&&label!=="Mathis"&&label!=="Maddy"?parseInt(reward):0),
           limitDate:(enableDate?limitDate:null),
-          period:(enableDate?period:0)
+          period:(enableDate?period:0),
+          label
         }),
       });
 
@@ -135,6 +138,18 @@ const TaskModal = ({ isOpen, onRequestClose, task }) => {
 
         <span>Récurrence : {periodText}</span>
         <input className='text-input' type="number" step="1" min="0" max="365" value={period} disabled={!enableDate} onChange={(e) => handlePeriodChange(e.target.value)}/>
+        <br/>
+
+        <span>Libellé</span>
+        <select className='text-input' type="text" value={label} onChange={(e) => setLabel(e.target.value)}>
+          <option value="">Aucun libellé</option>
+          <option value="Maddy">Maddy</option>
+          <option value="Mathis">Mathis</option>
+          <option value="Ménage">Ménage</option>
+          <option value="Rangement">Rangement</option>
+          <option value="Organisation">Organisation</option>
+          <option value="Bricolage">Bricolage</option>
+        </select>
         <br/>
 
         <h3 onClick={handleSaveTask} className='modal-button btn-success'><Save/>Sauvegarder</h3>

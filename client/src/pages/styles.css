@@ -304,7 +304,7 @@ h2 {
     background-color: #FFFFFFCC;
     border-radius: 10px 10px 0 0;
     margin: 10px 10px 0 10px;
-    padding: 2px 5px 5px 5px;
+    padding: 5px;
     cursor: grab;
 }
 
@@ -357,26 +357,43 @@ h2 {
     touch-action: none;
 }
 
+.kanban-item-label {
+    color: #000000b3;
+    width: fit-content;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+}
+
 .kanban-item-reward {
-    background-color: #ffffffa9;
+    background-color: #d0ac1e;
     border-radius: 15px;
     padding: 0 1px 1px 5px;
-    color: #a58400;
+    color: white;
+    text-wrap: nowrap;
+    text-overflow: hidden;
 }
 
 .kanban-item-title {
     font-weight: bold;
     font-size: 18px;
+    margin-top: -2px;
+    text-wrap: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    flex: 1;
 }
 
 .kanban-item-description {
-    font-style: italic;
-    color: rgba(0, 0, 0, 0.7);
+    color: #000000b3;
+    font-size: 15px;
+    margin-top: -3px;
 }
 
 .kanban-item-date {
-    background: rgb(108, 108, 108);
-    padding: 0 6px 1px 4px;
+    background: #6c6c6c;
+    padding: 0 5px;
     border-radius: 5px;
     color: white;
     width: fit-content;
@@ -386,20 +403,23 @@ h2 {
 }
 
 .kanban-item-date.green {
-    background: rgb(64, 120, 33);
+    background: #407821;
 }
 
 .kanban-item-date.orange {
-    background: rgb(120, 87, 33);
+    background: #785721;
 }
 
 .kanban-item-date.red {
-    background: rgb(120, 33, 33);
+    background: #782121;
 }
 
 .kanban-item-period {
     font-size: 15px;
-    color: rgba(0, 0, 0, 0.7);
+    color: #000000b3;
+    text-wrap: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
 }
 
 .drag-over {
