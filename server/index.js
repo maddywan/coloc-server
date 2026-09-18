@@ -376,7 +376,7 @@ app.post('/splittask', async (req, res) => {
     if (task1result.rows.length === 0) return res.status(500).json({ message: 'Task not found.' });
     const task1 = task1result.rows[0];
 
-    const task2result = await pool.query('INSERT INTO task (title,description,reward,limit_date,period,state,label) VALUES ($1,$2,$3,$4,$5,$6) RETURNING *;',[task1.title,task1.description,Math.round(reward/2),task1.limit_date,task1.period,task1.state,task1.label]);
+    const task2result = await pool.query('INSERT INTO task (title,description,reward,limit_date,period,state,label) VALUES ($1,$2,$3,$4,$5,$6,$7) RETURNING *;',[task1.title,task1.description,Math.round(reward/2),task1.limit_date,task1.period,task1.state,task1.label]);
     if (task2result.length === 0) return res.status(500).json({ message: 'Error while copying task.' });
 
     res.json(task2result.rows[0]);

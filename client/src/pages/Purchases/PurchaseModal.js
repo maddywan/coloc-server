@@ -53,6 +53,7 @@ const PurchaseModal = ({ isOpen, onRequestClose, purchase }) => {
         <br/>
 
         <h3 onClick={handleSavePurchase} className='modal-button btn-success'><Save/>Sauvegarder</h3>
+        <br/>
         <h3 onClick={onRequestClose} className='modal-button btn-info'><ArrowLeft/>Retour</h3>
     </Modal>
   );

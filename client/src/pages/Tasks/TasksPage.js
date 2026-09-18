@@ -100,11 +100,11 @@ const TasksPage = ({ tasks, setTasks, fetchTasks, users, fetchUsers }) => {
           </div>
           <div className="kanban-column-double">
             <div className="kanban-column">
-              <div className="kanban-column-title">Fait par Maddy ({users&&users[0]?users[0].points:'0'}🪙)</div>
+              <div className="kanban-column-title">🏆 Maddy - {users&&users[0]?users[0].points:'0'}🪙</div>
               <KanbanContent color="#6bd26459" state={2} tasks={tasks} openTaskModal={openTaskModal} double={true} />
             </div>
             <div className="kanban-column">
-              <div className="kanban-column-title">Fait par Mathis ({users&&users[1]?users[1].points:'0'}🪙)</div>
+              <div className="kanban-column-title">🏆 Mathis - {users&&users[1]?users[1].points:'0'}🪙</div>
               <KanbanContent color="#6bd26459" state={3} tasks={tasks} openTaskModal={openTaskModal} double={true} />
             </div>
           </div>

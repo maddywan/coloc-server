@@ -123,40 +123,40 @@ const TaskModal = ({ isOpen, onRequestClose, task }) => {
         <h2 className='text-center' style={{marginBlockStart:'0'}}>{task.id===-1?"Ajouter une tâche":"Modifier la tâche"}</h2>
         <br/>
         
-        <span>Titre / Description</span>
+        <span>Titre - Catégorie - Description</span>
         <input className='text-input' type="text" value={title} onChange={(e) => setTitle(e.target.value)}/>
+        <select className='text-input' type="text" value={label} onChange={(e) => setLabel(e.target.value)}>
+          <option value="">Sans catégorie</option>
+          <option value="Maddy">#Maddy</option>
+          <option value="Mathis">#Mathis</option>
+          <option value="Ménage">#Ménage</option>
+          <option value="Rangement">#Rangement</option>
+          <option value="Organisation">#Organisation</option>
+          <option value="Bricolage">#Bricolage</option>
+        </select>
         <textarea className='text-input' type="text" value={description} onChange={(e) => setDescription(e.target.value)}/>
         <br/>
 
         <span>Récompense 🪙</span>
-        <input className='text-input' type="number" step="10" min="0" max="1000" value={reward} onChange={(e) => setReward(e.target.value)}/>
+        <input className='text-input' type="number" step="10" min="0" max="1000" value={reward} onChange={(e) => setReward(e.target.value?Math.min(e.target.value,1000):'')}/>
         <br/>
 
         <span>Date limite</span><br/>
-        <input type='checkbox' className='toggleswitch' checked={enableDate} onChange={(e) => setEnableDate(e.target.checked)} style={{margin:"10px 0 0 20px"}}/>
-        <input className='text-input' type="date" value={limitDate} disabled={!enableDate} onChange={(e) => setLimitDate(e.target.value)}/>
+        <input type='checkbox' className='toggleswitch' checked={enableDate} onChange={(e) => setEnableDate(e.target.checked)} style={{margin:"10px 0 0 20px"}}/><br/>
+        {enableDate?<>
+          <input className='text-input' type="date" value={limitDate} disabled={!enableDate} onChange={(e) => setLimitDate(e.target.value)}/>
 
-        <span>Récurrence : {periodText}</span>
-        <input className='text-input' type="number" step="1" min="0" max="365" value={period} disabled={!enableDate} onChange={(e) => handlePeriodChange(e.target.value)}/>
-        <br/>
-
-        <span>Libellé</span>
-        <select className='text-input' type="text" value={label} onChange={(e) => setLabel(e.target.value)}>
-          <option value="">Aucun libellé</option>
-          <option value="Maddy">Maddy</option>
-          <option value="Mathis">Mathis</option>
-          <option value="Ménage">Ménage</option>
-          <option value="Rangement">Rangement</option>
-          <option value="Organisation">Organisation</option>
-          <option value="Bricolage">Bricolage</option>
-        </select>
+          <span>Récurrence : {periodText}</span>
+          <input className='text-input' type="number" step="1" min="0" max="365" value={period} disabled={!enableDate} onChange={(e) => handlePeriodChange(e.target.value)}/>
+        </>:''}
         <br/>
 
         <h3 onClick={handleSaveTask} className='modal-button btn-success'><Save/>Sauvegarder</h3>
         {task.id>-1?<>
+          <h3 onClick={handleSplitTask} className='modal-button btn-blue'><Split/>Partager la tâche </h3>
           <h3 onClick={handleDeleteTask} className='modal-button btn-danger'><Trash2/>Supprimer</h3>
-          <h3 onClick={handleSplitTask} className='modal-button btn-blue'><Split/>Spliter en 2</h3>
         </>:''}
+        <br/>
         <h3 onClick={onRequestClose} className='modal-button btn-info'><ArrowLeft/>Retour</h3>
     </Modal>
   );
