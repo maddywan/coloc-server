@@ -8,17 +8,24 @@ const KanbanItem = ({ task, openTaskModal, blockDrag=false }) => {
     const dateColor = task.limit_date && new Date(task.limit_date) < new Date().setHours(0,0,0,0)?'red':'orange';
     
     const getPeriodText = () => {
-        if (task.period === 1) return "Tous les jours";
-        else if (task.period === 7) return "Hebdomadaire";
-        else if (task.period === 14) return "Toutes les 2 semaines";
-        else if (task.period === 21) return "Toutes les 3 semaines";
-        else if (task.period === 28) return "Toutes les 4 semaines";
+        if (task.period === 1) return "Quotidien";
+        else if (task.period === 7) return "Hebdo";
+        else if (task.period === 14) return "/ 2 semaines";
+        else if (task.period === 21) return "/ 3 semaines";
+        else if (task.period === 28) return "/ 4 semaines";
         else if (task.period === 30) return "Mensuel";
         else if (task.period === 60) return "Bimestriel";
         else if (task.period === 90) return "Trimestriel";
-        else return "Tous les "+task.period+" jours";
+        else return "/ "+task.period+" jours";
     }
     const formattedPeriodText = getPeriodText();
+
+    const getBonusReward = () => {
+        if (!task.limit_date || task.finished_date) return 0;
+        const days = Math.round((new Date().setHours(0,0,0,0)-new Date(task.limit_date).setHours(0,0,0,0))/86400000);
+        return days>0?Math.min(days*5,100):0;
+    }
+    const bonusReward = getBonusReward();
 
     const handleEdit = () => {
         openTaskModal(task);
@@ -29,7 +36,9 @@ const KanbanItem = ({ task, openTaskModal, blockDrag=false }) => {
             <div className="kanban-item top" {...(blockDrag?{}:listeners)} {...attributes} style={{cursor:blockDrag?'not-allowed':'',touchAction:blockDrag?'':'none'}}>
                 <div style={{display: "flex", gap: "5px"}}>
                     <div className="kanban-item-title">{task.title}</div>
-                    {task.reward>0?<span className="kanban-item-reward">{task.reward}🪙</span>:''}
+                    {task.reward>0?<span className="kanban-item-reward">{task.reward}
+                    {bonusReward?<span style={{color: '#bd0e0e'}}>+{bonusReward}</span>:''}
+                    🪙</span>:''}
                 </div>
                 {task.label?<div className="kanban-item-label">#{task.label}</div>:''}
             </div>

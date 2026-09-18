@@ -324,8 +324,8 @@ app.post('/task', async (req, res) => {
 
 app.post('/taskstate', async (req, res) => {
   try {
-    const { taskId, state, winner, finishedDate } = req.body;
-    const taskresult = await pool.query(`UPDATE task SET state = $1, winner = $2, finished_date = $3 WHERE id = $4 RETURNING *;`,[state,winner,finishedDate,taskId])
+    const { taskId, state, winner, finishedDate, reward, totalReward } = req.body;
+    const taskresult = await pool.query(`UPDATE task SET state = $1, winner = $2, finished_date = $3, reward = $4 WHERE id = $5 RETURNING *;`,[state,winner,finishedDate,state>=2?totalReward:reward,taskId])
 
     if (taskresult.rows.length === 0) return res.status(500).json({ message: 'Task not found.' });
     const task = taskresult.rows[0];
@@ -343,7 +343,7 @@ app.post('/taskstate', async (req, res) => {
       if (!!task.limit_date && task.period > 0) {
         const newLimitDate = new Date();
         newLimitDate.setDate(newLimitDate.getDate() + task.period + 1);
-        const newtaskresult = await pool.query('INSERT INTO task (title,description,reward,limit_date,period,label) VALUES ($1,$2,$3,$4,$5,$6) RETURNING *;',[task.title,task.description,task.reward,newLimitDate.toISOString(),task.period,task.label]);
+        const newtaskresult = await pool.query('INSERT INTO task (title,description,reward,limit_date,period,label) VALUES ($1,$2,$3,$4,$5,$6) RETURNING *;',[task.title,task.description,reward,newLimitDate.toISOString(),task.period,task.label]);
         if (newtaskresult.rows.length === 0) return res.status(500).json({ message: 'Error while copying task.' });
       }
     }

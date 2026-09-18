@@ -33,6 +33,15 @@ const TasksPage = ({ tasks, setTasks, fetchTasks, users, fetchUsers }) => {
     setActiveTask(tasks.find(task => task.id === Number(active.id)));
   };
 
+  const getRewards = (taskId) => {
+    const task = tasks.find(t => t.id === taskId);
+    if (!task) return [0,0];
+    if (task.label && (task.label==='Maddy' || task.label==='Mathis')) return [0,0];
+    if (!task.limit_date) return [task.reward,0];
+    const days = Math.round((new Date().setHours(0,0,0,0)-new Date(task.limit_date).setHours(0,0,0,0))/86400000);
+    return [task.reward,days>0?task.reward+Math.min(days*5,100):task.reward];
+  }
+
   const handleDragEnd = async({ active, over }) => {
     if (!over || activeTask.state===Number(over.id)) return;
     setActiveTask(null);
@@ -57,11 +66,13 @@ const TasksPage = ({ tasks, setTasks, fetchTasks, users, fetchUsers }) => {
       task.id === taskId ? { ...task, state:newState, winner, finishedDate } : task
     ));
 
+    const rewards = getRewards(taskId);
+
     try {
       const response = await fetch(`/taskstate`, {
         method: 'POST',
         headers: {'Content-Type': 'application/json',},
-        body: JSON.stringify({taskId:taskId, state:newState, winner, finishedDate}),
+        body: JSON.stringify({taskId:taskId, state:newState, winner, finishedDate, reward:rewards[0], totalReward:rewards[1]}),
       });
       if (!response.ok) alert('Failed to change task state.');
     } catch (error) {
