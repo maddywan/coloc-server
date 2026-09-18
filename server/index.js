@@ -247,6 +247,48 @@ app.post('/newuser', async (req, res) => {
   }
 });
 
+// Global Data
+app.get('/globaldata', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT * FROM globaldata');
+
+    const data = result.rows;
+
+    res.json(data);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
+
+app.post('/globaldata', async (req, res) => {
+  try {
+    const { key, type, value } = req.body;
+
+    const allowedTypes = ['date'];
+    if (!allowedTypes.includes(type)) return res.status(500).send('Type invalide');
+
+    const result = await pool.query(`UPDATE globaldata SET ${type} = $1 WHERE key = $2 RETURNING *;`,[value, key]);
+    const data = result.rows;
+    res.json(data);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
+
+app.post('/refreshtask', async (req, res) => {
+  try {
+    const refreshedTasks = await pool.query(`UPDATE task SET state = 1 WHERE limit_date <= CURRENT_DATE AND finished_date IS NULL RETURNING *;`);
+    const deletedTasks = await pool.query(`DELETE FROM task WHERE finished_date < NOW() - INTERVAL '7 days' RETURNING *;`);
+    const updatedData = await pool.query(`UPDATE globaldata SET date = CURRENT_DATE WHERE key = 'refreshtask' RETURNING *;`);
+    res.json(updatedData.rows);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
+
 // Tasks
 app.get('/task', async (req, res) => {
   try {
@@ -290,7 +332,7 @@ app.post('/taskstate', async (req, res) => {
 
     if (state >= 2) {
       // Add to history
-      const historyresult = await pool.query(`INSERT INTO taskhistory (title,reward,finished_date,winner) VALUES ($1,$2,$3,$4) RETURNING *;`,[task.title,task.reward,finishedDate,winner]);
+      const historyresult = await pool.query(`INSERT INTO taskhistory (title,reward,finished_date,winner,label) VALUES ($1,$2,$3,$4,$5) RETURNING *;`,[task.title,task.reward,finishedDate,winner,task.label]);
       if (historyresult.rows.length === 0) return res.status(500).json({ message: 'Error while creating task history.' });
       
       // Give reward

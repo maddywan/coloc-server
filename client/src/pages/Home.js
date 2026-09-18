@@ -11,9 +11,19 @@ import PurchasesPage from './Purchases/PurchasesPage';
 const Home = () => {
   /* DATABASE */
 
+  const [globalData, setGlobalData] = useState([]);
   const [tasks, setTasks] = useState([]);
   const [purchases, setPurchases] = useState([]);
   const [users, setUsers] = useState([]);
+
+  const fetchGlobalData = useCallback(() => {
+    fetch("/globaldata")
+      .then((res) => res.json())
+      .then((data) => {
+        setGlobalData(data);
+      })
+      .catch((error) => console.error("Error fetching global data:", error));
+  }, []);
 
   const fetchTasks = useCallback(() => {
     fetch("/task")
@@ -63,14 +73,36 @@ const Home = () => {
   }, []);
 
   const fetchAll = useCallback(() => {
+    fetchGlobalData();
     fetchTasks();
     fetchPurchases();
     fetchUsers();
-  }, [fetchTasks,fetchPurchases,fetchUsers]);
+  }, [fetchGlobalData,fetchTasks,fetchPurchases,fetchUsers]);
 
   useEffect(() => {
     fetchAll();
   }, [fetchAll]);
+
+  /* REFRESH */
+
+  const refreshTask = async () => {
+    const refreshTaskKey = globalData.find(data => data.key === "refreshtask");
+    if (refreshTaskKey && new Date(refreshTaskKey.date) < new Date().setHours(0,0,0,0)) {
+      try {
+        const response = await fetch(`/refreshtask`, {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json',}
+        });
+        if (!response.ok) alert(`Error with /refreshtask endpoint.`);
+      } catch (error) {
+        console.error('Error with /refreshtask endpoint.', error);
+        alert('Error with /refreshtask endpoint.');
+      }
+      console.log("REFRESH FAIT");
+      fetchGlobalData();
+    }
+  }
+  refreshTask();
 
   /* NAVIGATION */
 
@@ -82,7 +114,7 @@ const Home = () => {
     { line: 2, name: "Courses", icon: <ScrollText size={30} />, pageFile: <PurchasesPage purchases={purchases} setPurchases={setPurchases} fetchPurchases={fetchPurchases} /> },
     { line: 2, name: "Paramètres", icon: <Settings size={30} />, pageFile: <SettingsPage/> }
   ];
-  const [activePage, setActivePage] = useState("Humeur");
+  const [activePage, setActivePage] = useState("Tâches");
   //const navigate = useNavigate();
   useEffect(() => {window.scrollTo(0,0);}, [activePage]);
 

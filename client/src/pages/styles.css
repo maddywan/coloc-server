@@ -364,12 +364,13 @@ h2 {
     align-items: center;
     gap: 4px;
     font-size: 12px;
+    margin: -2px 0 -3px 0;
 }
 
 .kanban-item-reward {
     background-color: #d0ac1e;
     border-radius: 15px;
-    padding: 0 1px 1px 5px;
+    padding: 0 1px 0 4px;
     color: white;
     text-wrap: nowrap;
     text-overflow: hidden;
@@ -407,7 +408,7 @@ h2 {
 }
 
 .kanban-item-date.orange {
-    background: #785721;
+    background: #786b21;
 }
 
 .kanban-item-date.red {
