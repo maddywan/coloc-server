@@ -121,7 +121,7 @@ const TasksPage = ({ tasks, setTasks, fetchTasks, users, fetchUsers }) => {
         task={selectedTask}
       />
 
-      <button className="overlay-button" onClick={()=>{openTaskModal({id:-1,title:"",description:"",reward:10,limit_date:null,period:0})}}>+ Ajouter une tâche</button>
+      <button className="overlay-button" onClick={()=>{openTaskModal({id:-1,title:"",description:"",reward:0,limit_date:null,period:0,label:""})}}>+ Ajouter une tâche</button>
     </div>
   );
 };

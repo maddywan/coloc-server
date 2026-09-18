@@ -137,9 +137,11 @@ const TaskModal = ({ isOpen, onRequestClose, task }) => {
         <textarea className='text-input' type="text" value={description} onChange={(e) => setDescription(e.target.value)}/>
         <br/>
 
-        <span>Récompense 🪙</span>
-        <input className='text-input' type="number" step="10" min="0" max="1000" value={reward} onChange={(e) => setReward(e.target.value?Math.min(e.target.value,1000):'')}/>
-        <br/>
+        {label!=='Maddy'&&label!=='Mathis'?<>
+          <span>Récompense 🪙</span>
+          <input className='text-input' type="number" step="10" min="0" max="1000" value={reward} disabled={label==='Maddy'||label==='Mathis'} onChange={(e) => setReward(e.target.value?Math.min(e.target.value,1000):'')}/>
+          <br/>
+        </>:''}
 
         <span>Date limite</span><br/>
         <input type='checkbox' className='toggleswitch' checked={enableDate} onChange={(e) => setEnableDate(e.target.checked)} style={{margin:"10px 0 0 20px"}}/><br/>
