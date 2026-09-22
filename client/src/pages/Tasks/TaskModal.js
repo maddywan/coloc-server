@@ -6,22 +6,24 @@ Modal.setAppElement('#root');
 
 const TaskModal = ({ isOpen, onRequestClose, task }) => {
   const [title, setTitle] = useState("");
+  const [label, setLabel] = useState("");
   const [description, setDescription] = useState("");
-  const [reward, setReward] = useState(0);
   const [enableDate, setEnableDate] = useState(false);
   const [limitDate, setLimitDate] = useState(null);
   const [period, setPeriod] = useState(0);
   const [periodText, setPeriodText] = useState("Unique");
-  const [label, setLabel] = useState("");
+  const [reward, setReward] = useState(0);
+  const [delayBonus, setDelayBonus] = useState(true);
 
   useEffect(() => {
     setTitle(task?task.title:"");
+    setLabel(task?task.label:"");
     setDescription(task?task.description:"");
-    setReward(task?task.reward:"");
     setEnableDate(task?task.limit_date!==null:"");
     setLimitDate(task?(task.limit_date?new Date(task.limit_date).toLocaleDateString("en-CA"):new Date().toLocaleDateString("en-CA")):"");
     handlePeriodChange(task?task.period:"");
-    setLabel(task?task.label:"");
+    setReward(task?task.reward:"");
+    setDelayBonus(task?task.delay_bonus:true);
   },[task]);
 
   const handlePeriodChange = (periodValue) => {
@@ -51,11 +53,12 @@ const TaskModal = ({ isOpen, onRequestClose, task }) => {
         body: JSON.stringify({
           taskId:task?task.id:-1,
           title,
+          label,
           description,
-          reward:(reward&&label!=="Mathis"&&label!=="Maddy"?parseInt(reward):0),
           limitDate:(enableDate?limitDate:null),
           period:(enableDate?period:0),
-          label
+          reward:(reward?parseInt(reward):0),
+          delayBonus:(delayBonus&&label!=="Mathis"&&label!=="Maddy")
         }),
       });
 
@@ -137,20 +140,24 @@ const TaskModal = ({ isOpen, onRequestClose, task }) => {
         <textarea className='text-input' type="text" value={description} onChange={(e) => setDescription(e.target.value)}/>
         <br/>
 
-        {label!=='Maddy'&&label!=='Mathis'?<>
-          <span>Récompense 🪙</span>
-          <input className='text-input' type="number" step="10" min="0" max="1000" value={reward} disabled={label==='Maddy'||label==='Mathis'} onChange={(e) => setReward(e.target.value?Math.min(e.target.value,1000):'')}/>
-          <br/>
-        </>:''}
-
-        <span>Date limite</span><br/>
-        <input type='checkbox' className='toggleswitch' checked={enableDate} onChange={(e) => setEnableDate(e.target.checked)} style={{margin:"10px 0 0 20px"}}/><br/>
+        <div style={{display:"flex"}}>
+            <input type='checkbox' className='toggleswitch' checked={enableDate} onChange={(e) => setEnableDate(e.target.checked)} style={{margin:"0 0 0 20px"}}/><br/>
+            <span style={{margin:"2px 0 0 5px"}}>Date limite</span>
+          </div>
         {enableDate?<>
           <input className='text-input' type="date" value={limitDate} disabled={!enableDate} onChange={(e) => setLimitDate(e.target.value)}/>
 
           <span>Récurrence : {periodText}</span>
           <input className='text-input' type="number" step="1" min="0" max="365" value={period} disabled={!enableDate} onChange={(e) => handlePeriodChange(e.target.value)}/>
         </>:''}
+        <br/>
+
+        <span>Récompense 🪙</span>
+        <input className='text-input' type="number" step="10" min="0" max="1000" value={reward} onChange={(e) => setReward(e.target.value?Math.min(e.target.value,1000):'')}/>
+          {label!=='Maddy'&&label!=='Mathis'?<div style={{display:"flex"}}>
+            <input type='checkbox' className='toggleswitch' checked={delayBonus} onChange={(e) => setDelayBonus(e.target.checked)} style={{margin:"0 0 0 20px"}}/><br/>
+            <span style={{margin:"2px 0 0 5px"}}>Bonus de retard</span>
+          </div>:''}
         <br/>
 
         <h3 onClick={handleSaveTask} className='modal-button btn-success'><Save/>Sauvegarder</h3>

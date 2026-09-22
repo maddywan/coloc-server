@@ -87,7 +87,7 @@ const Home = () => {
 
   const refreshTask = async () => {
     const refreshTaskKey = globalData.find(data => data.key === "refreshtask");
-    if (refreshTaskKey && new Date(refreshTaskKey.date) < new Date().setHours(0,0,0,0)) {
+    if (refreshTaskKey && new Date(refreshTaskKey.date).setHours(0,0,0,0) < new Date().setHours(0,0,0,0)-86400000) {
       try {
         const response = await fetch(`/refreshtask`, {
           method: 'POST',

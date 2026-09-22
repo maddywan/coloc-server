@@ -21,7 +21,7 @@ const KanbanItem = ({ task, openTaskModal, blockDrag=false }) => {
     const formattedPeriodText = getPeriodText();
 
     const getBonusReward = () => {
-        if (!task.limit_date || task.finished_date) return 0;
+        if (!task.delay_bonus || !task.limit_date || task.finished_date) return 0;
         const days = Math.round((new Date().setHours(0,0,0,0)-new Date(task.limit_date).setHours(0,0,0,0))/86400000);
         return days>0?Math.min(days*5,100):0;
     }

@@ -36,8 +36,7 @@ const TasksPage = ({ tasks, setTasks, fetchTasks, users, fetchUsers }) => {
   const getRewards = (taskId) => {
     const task = tasks.find(t => t.id === taskId);
     if (!task) return [0,0];
-    if (task.label && (task.label==='Maddy' || task.label==='Mathis')) return [0,0];
-    if (!task.limit_date) return [task.reward,task.reward];
+    if (!task.limit_date || !task.delay_bonus || (task.label && (task.label==='Maddy' || task.label==='Mathis'))) return [task.reward,task.reward];
     const days = Math.round((new Date().setHours(0,0,0,0)-new Date(task.limit_date).setHours(0,0,0,0))/86400000);
     return [task.reward,days>0?task.reward+Math.min(days*5,100):task.reward];
   }
@@ -67,7 +66,6 @@ const TasksPage = ({ tasks, setTasks, fetchTasks, users, fetchUsers }) => {
     ));
 
     const rewards = getRewards(taskId);
-    console.log(rewards);
 
     try {
       const response = await fetch(`/taskstate`, {

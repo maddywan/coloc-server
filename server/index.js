@@ -280,7 +280,7 @@ app.post('/globaldata', async (req, res) => {
 app.post('/refreshtask', async (req, res) => {
   try {
     const refreshedTasks = await pool.query(`UPDATE task SET state = 1 WHERE limit_date <= CURRENT_DATE AND finished_date IS NULL RETURNING *;`);
-    const deletedTasks = await pool.query(`DELETE FROM task WHERE finished_date < NOW() - INTERVAL '7 days' RETURNING *;`);
+    const deletedTasks = await pool.query(`DELETE FROM task WHERE finished_date < NOW() - INTERVAL '3 days' RETURNING *;`);
     const updatedData = await pool.query(`UPDATE globaldata SET date = CURRENT_DATE WHERE key = 'refreshtask' RETURNING *;`);
     res.json(updatedData.rows);
   } catch (err) {
@@ -305,14 +305,14 @@ app.get('/task', async (req, res) => {
 
 app.post('/task', async (req, res) => {
   try {
-    const { taskId, title, description, reward, limitDate, period, label } = req.body;
+    const { taskId, title, description, reward, limitDate, period, label, delayBonus } = req.body;
     
     if (taskId === -1) {
-      const result = await pool.query('INSERT INTO task (title,description,reward,limit_date,period,label) VALUES ($1,$2,$3,$4,$5,$6) RETURNING *;',[title,description,reward,limitDate,period,label]);
+      const result = await pool.query('INSERT INTO task (title,description,reward,limit_date,period,label,delay_bonus) VALUES ($1,$2,$3,$4,$5,$6,$7) RETURNING *;',[title,description,reward,limitDate,period,label,delayBonus]);
       const tasks = result.rows;
       res.json(tasks);
     } else {
-      const result = await pool.query('UPDATE task SET title = $1, description = $2, reward = $3, limit_date = $4, period = $5, label = $6 WHERE id = $7 RETURNING *;',[title,description,reward,limitDate,period,label,taskId]);
+      const result = await pool.query('UPDATE task SET title = $1, description = $2, reward = $3, limit_date = $4, period = $5, label = $6, delay_bonus = $7 WHERE id = $8 RETURNING *;',[title,description,reward,limitDate,period,label,delayBonus,taskId]);
       const tasks = result.rows;
       res.json(tasks);
     }
@@ -343,7 +343,7 @@ app.post('/taskstate', async (req, res) => {
       if (!!task.limit_date && task.period > 0) {
         const newLimitDate = new Date();
         newLimitDate.setDate(newLimitDate.getDate() + task.period + 1);
-        const newtaskresult = await pool.query('INSERT INTO task (title,description,reward,limit_date,period,label) VALUES ($1,$2,$3,$4,$5,$6) RETURNING *;',[task.title,task.description,reward,newLimitDate.toISOString(),task.period,task.label]);
+        const newtaskresult = await pool.query('INSERT INTO task (title,description,reward,limit_date,period,label,delay_bonus) VALUES ($1,$2,$3,$4,$5,$6,$7) RETURNING *;',[task.title,task.description,reward,newLimitDate.toISOString(),task.period,task.label,task.delay_bonus]);
         if (newtaskresult.rows.length === 0) return res.status(500).json({ message: 'Error while copying task.' });
       }
     }
@@ -376,7 +376,7 @@ app.post('/splittask', async (req, res) => {
     if (task1result.rows.length === 0) return res.status(500).json({ message: 'Task not found.' });
     const task1 = task1result.rows[0];
 
-    const task2result = await pool.query('INSERT INTO task (title,description,reward,limit_date,period,state,label) VALUES ($1,$2,$3,$4,$5,$6,$7) RETURNING *;',[task1.title,task1.description,Math.round(reward/2),task1.limit_date,task1.period,task1.state,task1.label]);
+    const task2result = await pool.query('INSERT INTO task (title,description,reward,limit_date,period,state,label,delay_bonus) VALUES ($1,$2,$3,$4,$5,$6,$7,$8) RETURNING *;',[task1.title,task1.description,Math.round(reward/2),task1.limit_date,task1.period,task1.state,task1.label,task1.delay_bonus]);
     if (task2result.length === 0) return res.status(500).json({ message: 'Error while copying task.' });
 
     res.json(task2result.rows[0]);
