@@ -52,9 +52,9 @@ const PurchaseModal = ({ isOpen, onRequestClose, purchase }) => {
         <input className='text-input' type="text" value={title} onChange={(e) => setTitle(e.target.value)}/>
         <br/>
 
-        <h3 onClick={handleSavePurchase} className='modal-button btn-success'><Save/>Sauvegarder</h3>
+        <h3 onClick={handleSavePurchase} className='modal-button success'><Save/>Sauvegarder</h3>
         <br/>
-        <h3 onClick={onRequestClose} className='modal-button btn-info'><ArrowLeft/>Retour</h3>
+        <h3 onClick={onRequestClose} className='modal-button info'><ArrowLeft/>Retour</h3>
     </Modal>
   );
 };

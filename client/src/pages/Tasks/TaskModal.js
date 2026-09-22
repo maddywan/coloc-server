@@ -1,6 +1,7 @@
 import { ArrowLeft, Save, Split, Trash2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import Modal from 'react-modal';
+import { labels } from '../data/data';
 
 Modal.setAppElement('#root');
 
@@ -130,12 +131,9 @@ const TaskModal = ({ isOpen, onRequestClose, task }) => {
         <input className='text-input' type="text" value={title} onChange={(e) => setTitle(e.target.value)}/>
         <select className='text-input' type="text" value={label} onChange={(e) => setLabel(e.target.value)}>
           <option value="">Sans catégorie</option>
-          <option value="Maddy">#Maddy</option>
-          <option value="Mathis">#Mathis</option>
-          <option value="Ménage">#Ménage</option>
-          <option value="Rangement">#Rangement</option>
-          <option value="Organisation">#Organisation</option>
-          <option value="Bricolage">#Bricolage</option>
+          {labels.map(label => 
+            <option key={label.title} value={label.title}>#{label.title}</option>
+          )}
         </select>
         <textarea className='text-input' type="text" value={description} onChange={(e) => setDescription(e.target.value)}/>
         <br/>
@@ -160,13 +158,13 @@ const TaskModal = ({ isOpen, onRequestClose, task }) => {
           </div>:''}
         <br/>
 
-        <h3 onClick={handleSaveTask} className='modal-button btn-success'><Save/>Sauvegarder</h3>
+        <h3 onClick={handleSaveTask} className='modal-button success'><Save/>Sauvegarder</h3>
         {task.id>-1?<>
-          <h3 onClick={handleSplitTask} className='modal-button btn-blue'><Split/>Partager la tâche </h3>
-          <h3 onClick={handleDeleteTask} className='modal-button btn-danger'><Trash2/>Supprimer</h3>
+          <h3 onClick={handleSplitTask} className='modal-button blue'><Split/>Partager la tâche </h3>
+          <h3 onClick={handleDeleteTask} className='modal-button danger'><Trash2/>Supprimer</h3>
         </>:''}
         <br/>
-        <h3 onClick={onRequestClose} className='modal-button btn-info'><ArrowLeft/>Retour</h3>
+        <h3 onClick={onRequestClose} className='modal-button info'><ArrowLeft/>Retour</h3>
     </Modal>
   );
 };

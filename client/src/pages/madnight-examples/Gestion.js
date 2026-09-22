@@ -477,7 +477,7 @@ const Gestion = () => {
           <h2 className='text-hr'><span>Utilisateurs</span></h2>
         </div>
         <div style={{display:'flex'}}>
-          <button className='btn-success'
+          <button className='success'
             onClick={() => openUserModal()}
           ><PlusCircle size={20}/> Créer un utilisateur</button>
           <p style={{margin:'15px 0 0 0'}}>{users.filter(u => u.active).length}/{users.length} personnes présentes</p>
@@ -536,7 +536,7 @@ const Gestion = () => {
                   </tbody>
                 </table>
               </>}
-              <button className='btn-danger'
+              <button className='danger'
                 onClick={() => {
                   if (window.confirm(`Êtes-vous sûr de vouloir supprimer ${user.name} ?`)) {
                     handleDeleteUser(user);
@@ -592,7 +592,7 @@ const Gestion = () => {
                                 />
                               </div>
                               <div style={{display:'flex'}}>
-                                <button className='btn-info' style={{margin:'3px 5px 0 auto',height:'28px'}}
+                                <button className='info' style={{margin:'3px 5px 0 auto',height:'28px'}}
                                   disabled={cocktail.menu_order===0}
                                   onClick={() => moveCocktail(cocktail,-1)}>
                                   <ArrowBigLeft size={17}/>
@@ -600,7 +600,7 @@ const Gestion = () => {
                                 <input type='checkbox' checked={cocktail.active} className='toggleswitch'
                                   onClick={() => {cocktailToggle(cocktail)}}
                                 ></input>
-                                <button className='btn-info' style={{margin:'3px auto 0 6px',height:'28px'}}
+                                <button className='info' style={{margin:'3px auto 0 6px',height:'28px'}}
                                   onClick={() => moveCocktail(cocktail,1)}>
                                   <ArrowBigRight size={17}/>
                                 </button>
@@ -610,7 +610,7 @@ const Gestion = () => {
                         </>
                       ))}
                     </div>
-                    <button className='btn-success'
+                    <button className='success'
                       onClick={() => {setEditedCocktail({name:'Nouveau produit',type:'COCKTAIL',volume:0,price:0,menu_order:-1,img:'images/cocktail/noimage.jpg',recipe:[]})}}
                     ><PlusCircle size={20}/> Créer un produit</button>
                   </>

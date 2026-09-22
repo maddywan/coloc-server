@@ -6,7 +6,7 @@ const KanbanContent = ({ color, state, tasks, openTaskModal, double=false }) => 
 
   return (
     <div ref={setNodeRef} className={`kanban-column-content ${isOver ? "drag-over" : ""}`} style={{ backgroundColor: color }}>
-      {tasks.filter(task => task.state === state).map(task => (
+      {tasks.map(task => (
         <KanbanItem key={task.id} task={task} openTaskModal={openTaskModal} blockDrag={double} />
       ))}
     </div>

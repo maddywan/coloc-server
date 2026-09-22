@@ -129,7 +129,7 @@ button {
 }
 
 h2 {
-    margin: 8px;
+    margin: 0;
 }
 
 .vertical-hr {
@@ -142,7 +142,7 @@ h2 {
 
 /* Buttons */
 
-.btn-success, .btn-danger, .btn-info, .btn-blue {
+.modal-button {
     border: 1px white solid;
     border-radius: 10px;
     color: var(--text);
@@ -155,46 +155,69 @@ h2 {
     cursor: pointer;
 }
 
-.btn-success:disabled, .btn-danger:disabled, .btn-info:disabled, .btn-blue:dsabled {
+.modal-button:disabled {
     color: var(--text-soft);
     border: 1px var(--text-soft) solid;
     opacity: 0;
 }
 
-.btn-success {
-    background-color: var(--success);
-}
-
-.btn-danger {
-    background-color: var(--danger);
-}
-
-.btn-info {
-    background-color: var(--info);
-}
-
-.btn-blue {
-    background-color: var(--blue);
-}
-
-.btn-big {
-    background-color: var(--background);
-    color: var(--text);
-    border: solid 1px white;
-    font-size: 1.1em;
-    transition: all 0.3s;
-    margin: auto;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    padding: 10px;
+.big-button {
+    border: 2px solid white;
+    border-radius: 10px;
+    background: white;
+    color: black;
     cursor: pointer;
+    box-shadow:
+        0 8px 25px rgba(0, 0, 0, 0.15),
+        0 2px 8px rgba(0, 0, 0, 0.08);
+    transition:
+        transform 0.2s ease,
+        background 0.2s ease,
+        box-shadow 0.2s ease;
+    z-index: 1000;
+    font-size: 22px;
+    padding: 10px;
+    text-wrap: nowrap;
 }
 
-.btn-big:active, .btn-big:disabled {
-    background-color: var(--text);
-    color: var(--background);
+.big-button:hover {
+    transform: scale(1.03);
+    box-shadow:
+        0 12px 30px rgba(0, 0, 0, 0.2),
+        0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.big-button:active {
+    transform: scale(0.97);
+}
+
+.big-button.overlay {
+    position: fixed;
+    left: 30px;
+    bottom: 270px;
+}
+
+.success {background-color: var(--success); color: white;}
+.danger {background-color: var(--danger); color: white;}
+.info {background-color: var(--info); color: white;}
+.blue {background-color: var(--blue); color: white;}
+
+/* Title Bar */
+
+.title-bar {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid white;
+    padding: 5px;
+    box-sizing: border-box;
+    gap: 10px;
+    min-height: 70px;
+    overflow: scroll;
+}
+
+.title-bar-item {
+    margin: auto 0;
 }
 
 /* Filters */
@@ -203,27 +226,19 @@ h2 {
     display: flex;
     justify-content: flex-start;
     text-align: left;
-    width: 99%;
-    margin-left: 1%;
-    margin-bottom: 5px;
-    flex-wrap: wrap;
-}
-
-.filter-container.fo {
-    justify-content: center;
-    width: 100%;
-    margin-left: 0;
+    gap: 5px;
 }
 
 .filter-element {
-    margin: 5px;
-    padding: 2px 5px;
-    border-radius: 7px;
+    padding: 10px 5px;
+    border-radius: 10px;
     background: var(--background-soft);
     color: var(--text);
     border: 1px solid white;
     cursor: pointer;
     transition: color 0.3s, background 0.3s;
+    height: fit-content;
+    margin: auto;
 }
 
 .filter-element.active {
@@ -233,7 +248,8 @@ h2 {
 }
 
 .filter-cross {
-    margin-top: 7px;
+    margin: auto;
+    padding-top: 6px;
     color: var(--text);
     cursor: pointer;
 }
@@ -245,7 +261,7 @@ h2 {
     flex-direction: row;
     gap: 0;
     width: calc(100vw - 24px);
-    height: calc(100vh - 300px);
+    height: calc(100vh - 320px);
     margin: auto;
     align-items: stretch;
     box-sizing: border-box;
@@ -322,12 +338,13 @@ h2 {
 .kanban-item.horizontal {
     display: flex;
     flex-direction: row;
+    margin: 10px 0;
 }
 
 .kanban-item.left {
     background-color: #FFFFFFCC;
     border-radius: 10px 0 0 10px;
-    margin: 10px 0 0 10px;
+    margin: 0 0 0 10px;
     padding: 5px;
     height: 25px;
     display: flex;
@@ -337,7 +354,7 @@ h2 {
 .kanban-item.right {
     background-color: #FFFFFF77;
     border-radius: 0 10px 10px 0;
-    margin: 10px 10px 0 0;
+    margin: 0 10px 0 0;
     padding: 5px 8px;
     height: 25px;
     flex: 1 1 auto;
@@ -492,40 +509,6 @@ h2 {
 
 .toggleswitch:disabled {
     background-color: var(--background-soft)!important;
-}
-
-/* Overlay Button */
-
-.overlay-button {
-    position: fixed;
-    left: 30px;
-    bottom: 270px;
-    border: none;
-    border-radius: 10px;
-    background: white;
-    color: black;
-    cursor: pointer;
-    box-shadow:
-        0 8px 25px rgba(0, 0, 0, 0.15),
-        0 2px 8px rgba(0, 0, 0, 0.08);
-    transition:
-        transform 0.2s ease,
-        background 0.2s ease,
-        box-shadow 0.2s ease;
-    z-index: 1000;
-    font-size: 22px;
-    padding: 10px;
-}
-
-.overlay-button:hover {
-    transform: scale(1.03);
-    box-shadow:
-        0 12px 30px rgba(0, 0, 0, 0.2),
-        0 4px 10px rgba(0, 0, 0, 0.1);
-}
-
-.overlay-button:active {
-    transform: scale(0.97);
 }
 
 /* Voice Button */
@@ -744,4 +727,43 @@ textarea {
 
 .no-scroll {
     overflow: hidden;
+}
+
+/* PHONE DISPLAY */
+
+@media (max-width: 550px) {
+    .kanban {
+        flex-direction: column;
+        height: auto;
+        margin-bottom: 10px;
+    }
+
+    .kanban-column-content {
+        min-height: 100px;
+    }
+
+    .bottom-toolbar {
+        height: 40px;
+    }
+
+    .bottom-toolbar.up {
+        bottom: 40px;
+    }
+
+    .toolbar-button div {
+        flex-direction: row;
+        font-size: 12px;
+    }
+
+    .toolbar-space {
+        height: 80px;
+    }
+
+    .voice-button {
+        position: fixed;
+        bottom: 90px;
+        margin-left: -25px;
+        width: 50px;
+        height: 50px;
+    }
 }

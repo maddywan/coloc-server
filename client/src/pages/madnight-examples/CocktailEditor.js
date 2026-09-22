@@ -108,13 +108,13 @@ export default function CocktailEditor({ cocktail, cocktails, ingredients, drink
   return (
     <>
       <h2 className='text-hr'><span>Nouveau produit</span></h2>
-      <button className='btn-success' style={{width:'200px'}}
+      <button className='success' style={{width:'200px'}}
         onClick={handleSave}
       ><Save size={20}/> Enregistrer</button>
-      {formData.id && <button className='btn-danger' style={{width:'200px',marginTop:'0'}}
+      {formData.id && <button className='danger' style={{width:'200px',marginTop:'0'}}
         onClick={handleDelete}
       ><Trash2 size={20}/> Supprimer</button>}
-      <button className='btn-info' style={{width:'200px',marginTop:'0'}}
+      <button className='info' style={{width:'200px',marginTop:'0'}}
         onClick={handleCancel}
       ><ArrowLeftCircle size={20}/> Annuler</button>
       <div className='cocktail-editor-container' style={{width:'100%'}}>
@@ -203,13 +203,13 @@ export default function CocktailEditor({ cocktail, cocktails, ingredients, drink
                   <input type='checkbox' className='toggleswitch' checked={recipe_step.showclient} onChange={(e) => handleRecipeChange(index, 'showclient', e.target.checked)} style={{marginLeft:'0'}}/>
                 </div>
                 <div style={{display:'flex',gap:'10px'}}>
-                  {index!==0 && <button className="btn-info" style={{margin:'0',marginBottom:'0'}}
+                  {index!==0 && <button className="info" style={{margin:'0',marginBottom:'0'}}
                     onClick={() => moveIngredient(index,'up')}>
                   <ArrowBigUp size={20} /></button>}
-                  {index!==formData.recipe.length-1 && <button className="btn-info" style={{margin:'0',marginBottom:'0'}}
+                  {index!==formData.recipe.length-1 && <button className="info" style={{margin:'0',marginBottom:'0'}}
                     onClick={() => moveIngredient(index,'down')}>
                   <ArrowBigDown size={20} /></button>}
-                  <button className="btn-danger" style={{margin:'0',marginBottom:'0'}}
+                  <button className="danger" style={{margin:'0',marginBottom:'0'}}
                     onClick={() => handleRemoveIngredient(index)}>
                   <Trash2 size={20} /></button>
                 </div>
@@ -231,7 +231,7 @@ export default function CocktailEditor({ cocktail, cocktails, ingredients, drink
               </div>
             </div>
           ))}
-          <button className='btn-success' style={{width:'100%',marginBottom:'0'}}
+          <button className='success' style={{width:'100%',marginBottom:'0'}}
             onClick={() => {
               setFormData({
                 ...formData,

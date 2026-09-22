@@ -8,7 +8,7 @@ const SettingsPage = ({ settings }) => {
   return (
     <div className='article-column-container'>
       <h2>Paramètres</h2>
-      <button className='btn-info' onClick={goFullscreen}>
+      <button className='modal-button info' onClick={goFullscreen}>
         Plein écran
       </button>
     </div>

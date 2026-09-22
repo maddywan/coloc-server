@@ -33,7 +33,7 @@ const UsersPage = ({ users }) => {
             </div>
           </div>
           <div className={'user-list-infos opened'}>
-            <button className='btn-danger'
+            <button className='danger'
               onClick={() => {
                 if (window.confirm(`Êtes-vous sûr de vouloir supprimer ${user.name} ?`)) {
                   handleDeleteUser(user);

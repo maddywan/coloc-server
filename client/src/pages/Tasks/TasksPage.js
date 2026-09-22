@@ -4,6 +4,8 @@ import KanbanContent from './KanbanContent';
 import KanbanItem from './KanbanItem';
 import { useState } from 'react';
 import TaskModal from './TaskModal';
+import { labels } from '../data/data';
+import { X } from 'lucide-react';
 
 const TasksPage = ({ tasks, setTasks, fetchTasks, users, fetchUsers }) => {
   /* MODAL */
@@ -82,29 +84,52 @@ const TasksPage = ({ tasks, setTasks, fetchTasks, users, fetchUsers }) => {
     fetchUsers();
   };
 
+  /* FILTERS AND DISPLAY */
+
+  const [filters, setFilters] = useState(labels);
+  const [displayToDo, setDisplayToDo] = useState(false);
+
   /* PAGE */
 
   return (
     <div className="article-column-container">
-      <h2>Tâches</h2>
+      <div className="title-bar">
+        <div className="title-bar-item">
+          <p style={{margin:"auto"}}>À faire</p>
+          <input style={{margin:"auto"}} type='checkbox' className='toggleswitch' checked={displayToDo} onChange={(e) => setDisplayToDo(e.target.checked)}/><br/>
+        </div>
+        <div className='title-bar-item filter-container'>
+          {filters.map((filter,index) => (
+            <div className={`filter-element ${filter.active ? 'active' : ''}`}
+              onClick={() => setFilters(filters.map((filter,i) =>
+                i === index ? { ...filter, active: !filter.active } : filter
+              ))}
+            >{filter.title}</div>
+          ))}
+          <div className='filter-cross'
+            onClick={() => setFilters(filters.map((filter) => ({...filter, active: false})))}
+          ><X/></div>
+        </div>
+        <button className="title-bar-item big-button success" onClick={()=>{openTaskModal({id:-1,title:"",description:"",reward:0,limit_date:null,period:0,label:""})}}> + Tâche</button>
+      </div>
       <DndContext sensors={sensors} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
         <div className="kanban">
-          <div className="kanban-column">
+          {displayToDo?<div className="kanban-column">
             <div className="kanban-column-title">À faire</div>
-            <KanbanContent color="#64a0d259" state={0} tasks={tasks} openTaskModal={openTaskModal} />
-          </div>
+            <KanbanContent color="#64a0d259" state={0} tasks={tasks.filter(task => task.state === 0 && (!task.label || filters.find(a => a.title === task.label)?.active))} openTaskModal={openTaskModal} />
+          </div>:''}
           <div className="kanban-column">
               <div className="kanban-column-title">Prochaines tâches</div>
-              <KanbanContent color="#d264c359" state={1} tasks={tasks} openTaskModal={openTaskModal} />
+              <KanbanContent color="#d264c359" state={1} tasks={tasks.filter(task => task.state === 1 && (!task.label || filters.find(a => a.title === task.label)?.active))} openTaskModal={openTaskModal} />
           </div>
           <div className="kanban-column-double">
             <div className="kanban-column">
               <div className="kanban-column-title">🏆 Maddy - {users&&users[0]?users[0].points:'0'}🪙</div>
-              <KanbanContent color="#6bd26459" state={2} tasks={tasks} openTaskModal={openTaskModal} double={true} />
+              <KanbanContent color="#6bd26459" state={2} tasks={tasks.filter(task => task.state === 2)} openTaskModal={openTaskModal} double={true} />
             </div>
             <div className="kanban-column">
               <div className="kanban-column-title">🏆 Mathis - {users&&users[1]?users[1].points:'0'}🪙</div>
-              <KanbanContent color="#6bd26459" state={3} tasks={tasks} openTaskModal={openTaskModal} double={true} />
+              <KanbanContent color="#6bd26459" state={3} tasks={tasks.filter(task => task.state === 3)} openTaskModal={openTaskModal} double={true} />
             </div>
           </div>
         </div>
@@ -119,8 +144,6 @@ const TasksPage = ({ tasks, setTasks, fetchTasks, users, fetchUsers }) => {
         onRequestClose={closeTaskModal}
         task={selectedTask}
       />
-
-      <button className="overlay-button" onClick={()=>{openTaskModal({id:-1,title:"",description:"",reward:0,limit_date:null,period:0,label:""})}}>+ Ajouter une tâche</button>
     </div>
   );
 };

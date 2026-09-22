@@ -41,8 +41,8 @@ const BoUserModal = ({ isOpen, onRequestClose }) => {
           onChange={(e) => setUsername(e.target.value)}
         ></input><br/>
         <br/>
-        <h3 onClick={() => handleNewUser(username)} className='modal-button btn-success'>Créer l'utilisateur</h3>
-        <h3 onClick={onRequestClose} className='modal-button btn-info'>Retour</h3>
+        <h3 onClick={() => handleNewUser(username)} className='modal-button success'>Créer l'utilisateur</h3>
+        <h3 onClick={onRequestClose} className='modal-button info'>Retour</h3>
     </Modal>
   );
 };

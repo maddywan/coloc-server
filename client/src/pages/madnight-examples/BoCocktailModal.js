@@ -42,11 +42,11 @@ const BoCocktailModal = ({ isOpen, onRequestClose, cocktail, onMake }) => {
 
         <div style={{margin:'0 20px',display:'flex',justifyContent:'space-between'}}>
           <div style={{display:'flex'}}>
-            <button className="btn-info" style={{margin:'0',marginBottom:'0',height:'28px'}}
+            <button className="info" style={{margin:'0',marginBottom:'0',height:'28px'}}
               onClick={() => {if (factor>1) setFactor(factor-1)}}>
             <Minus size={20} /></button>
             <div style={{margin:'0',background:'var(--info)',height:'28px',boxSizing:'border-box',fontSize:'0.8em',textAlign:'center',width:'30px',paddingTop:'3px',borderTop:'1px solid white',borderBottom:'1px solid white'}} >x{factor}</div>
-            <button className="btn-info" style={{margin:'0',marginBottom:'0',height:'28px'}}
+            <button className="info" style={{margin:'0',marginBottom:'0',height:'28px'}}
               onClick={() => {if (factor<10) setFactor(factor+1)}}>
             <Plus size={20} /></button>
           </div>
@@ -75,9 +75,9 @@ const BoCocktailModal = ({ isOpen, onRequestClose, cocktail, onMake }) => {
           ))}
         </ul>
 
-        <h3 onClick={() => handleMake(factor*-1)} className='modal-button btn-success'>Préparer {factor}</h3>
-        <h3 onClick={() => handleMake(factor)} className='modal-button btn-danger'>Remettre {factor} en stock</h3>
-        <h3 onClick={onRequestClose} className='modal-button btn-info'>Retour</h3>
+        <h3 onClick={() => handleMake(factor*-1)} className='modal-button success'>Préparer {factor}</h3>
+        <h3 onClick={() => handleMake(factor)} className='modal-button danger'>Remettre {factor} en stock</h3>
+        <h3 onClick={onRequestClose} className='modal-button info'>Retour</h3>
     </Modal>
   );
 };

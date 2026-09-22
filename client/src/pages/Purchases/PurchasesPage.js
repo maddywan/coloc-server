@@ -79,7 +79,10 @@ const PurchasesPage = ({ purchases, setPurchases, fetchPurchases }) => {
 
   return (
     <div className="article-column-container">
-      <h2>Listes de courses</h2>
+      <div className="title-bar">
+        <h2 className='title-bar-item'>Listes de courses</h2>
+        <button className="title-bar-item big-button success" onClick={()=>{openPurchaseModal({id:-1,title:""})}}>+ Produit</button>
+      </div>
       <DndContext sensors={sensors} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
         <div className="kanban">
           <div className="kanban-column">
@@ -106,8 +109,6 @@ const PurchasesPage = ({ purchases, setPurchases, fetchPurchases }) => {
         onRequestClose={closePurchaseModal}
         purchase={selectedPurchase}
       />
-
-      <button className="overlay-button" onClick={()=>{openPurchaseModal({id:-1,title:""})}}>+ Ajouter un produit</button>
     </div>
   );
 };
