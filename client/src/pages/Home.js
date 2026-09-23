@@ -1,12 +1,13 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import './styles.css';
-import { Smile, Users, ReceiptText, Speaker, ScrollText, Settings } from 'lucide-react';
+import { Users, ReceiptText, Speaker, ScrollText, Settings, Map } from 'lucide-react';
 //import { useNavigate } from "react-router-dom";
 import UsersPage from './UsersPage';
 import VoiceButton from "./VoiceButton";
 import TasksPage from './Tasks/TasksPage';
 import SettingsPage from './SettingsPage';
 import PurchasesPage from './Purchases/PurchasesPage';
+import PlanPage from './Plan/PlanPage';
 
 const Home = () => {
   /* DATABASE */
@@ -107,7 +108,7 @@ const Home = () => {
   /* NAVIGATION */
 
   const pages = [
-    { line: 1, name: "Humeur", icon: <Smile size={30} />, pageFile: <></> },
+    { line: 1, name: "Plan", icon: <Map size={30} />, pageFile: <PlanPage/> },
     { line: 1, name: "Tâches", icon: <ReceiptText size={30} />, pageFile: <TasksPage tasks={tasks} setTasks={setTasks} fetchTasks={fetchTasks} users={users} fetchUsers={fetchUsers} /> },
     { line: 1, name: "Colocation", icon: <Users size={30} />, pageFile: <UsersPage users={users}/> },
     { line: 2, name: "Soundboard", icon: <Speaker size={30} />, pageFile: <></> },

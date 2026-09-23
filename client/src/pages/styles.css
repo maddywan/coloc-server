@@ -663,6 +663,20 @@ h2 {
     height: 240px;
 }
 
+/* Plan */
+
+.zone {
+  fill: #ffffff00;
+  stroke: transparent;
+  cursor: pointer;
+}
+
+.zone:hover {
+  fill: #ff000066;
+  stroke: transparent;
+  stroke-width: 1;
+}
+
 /* Modals */
 
 .modal {
