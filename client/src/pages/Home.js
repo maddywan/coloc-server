@@ -108,7 +108,7 @@ const Home = () => {
   /* NAVIGATION */
 
   const pages = [
-    { line: 1, name: "Plan", icon: <Map size={30} />, pageFile: <PlanPage/> },
+    { line: 1, name: "Plan", icon: <Map size={30} />, pageFile: <PlanPage tasks={tasks.filter(t => t.label==="Plan" && t.state<2)} fetchTasks={fetchTasks} fetchUsers={fetchUsers}/> },
     { line: 1, name: "Tâches", icon: <ReceiptText size={30} />, pageFile: <TasksPage tasks={tasks} setTasks={setTasks} fetchTasks={fetchTasks} users={users} fetchUsers={fetchUsers} /> },
     { line: 1, name: "Colocation", icon: <Users size={30} />, pageFile: <UsersPage users={users}/> },
     { line: 2, name: "Soundboard", icon: <Speaker size={30} />, pageFile: <></> },

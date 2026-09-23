@@ -197,6 +197,44 @@ h2 {
     bottom: 270px;
 }
 
+.choice-button-container {
+    margin: 0 20px;
+    display: flex;
+}
+
+.choice-button {
+    border-top: 2px solid white;
+    border-bottom: 2px solid white;
+    border-left: 1px solid white;
+    border-right: 1px solid white;
+    background: black;
+    color: white;
+    cursor: pointer;
+    transition:
+        transform 0.2s ease,
+        background 0.2s ease,
+        box-shadow 0.2s ease;
+    font-size: 22px;
+    padding: 10px;
+    text-wrap: nowrap;
+    width: 100%;
+}
+
+.choice-button.selected {
+    background-color: white;
+    color: black;
+}
+
+.choice-button.left {
+    border-radius: 10px 0 0 10px;
+    border-left: 2px solid white;
+}
+
+.choice-button.right {
+    border-radius: 0 10px 10px 0;
+    border-right: 2px solid white;
+}
+
 .success {background-color: var(--success); color: white;}
 .danger {background-color: var(--danger); color: white;}
 .info {background-color: var(--info); color: white;}
@@ -666,15 +704,15 @@ h2 {
 /* Plan */
 
 .zone {
-  fill: #ffffff00;
-  stroke: transparent;
-  cursor: pointer;
+    fill: #ffffff00;
+    stroke: transparent;
+    cursor: pointer;
 }
 
-.zone:hover {
-  fill: #ff000066;
-  stroke: transparent;
-  stroke-width: 1;
+.zone.selected {
+    fill: #ffe10060;
+    stroke: transparent;
+    stroke-width: 1;
 }
 
 /* Modals */

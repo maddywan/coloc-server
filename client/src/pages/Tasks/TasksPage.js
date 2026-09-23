@@ -116,20 +116,20 @@ const TasksPage = ({ tasks, setTasks, fetchTasks, users, fetchUsers }) => {
         <div className="kanban">
           {displayToDo?<div className="kanban-column">
             <div className="kanban-column-title">À faire</div>
-            <KanbanContent color="#64a0d259" state={0} tasks={tasks.filter(task => task.state === 0 && (!task.label || filters.find(a => a.title === task.label)?.active))} openTaskModal={openTaskModal} />
+            <KanbanContent color="#64a0d259" state={0} tasks={tasks.filter(task => task.state === 0 && (!task.label || filters.find(a => a.title === task.label)?.active))} openTaskModal={openTaskModal} getRewards={getRewards}/>
           </div>:''}
           <div className="kanban-column">
               <div className="kanban-column-title">Prochaines tâches</div>
-              <KanbanContent color="#d264c359" state={1} tasks={tasks.filter(task => task.state === 1 && (!task.label || filters.find(a => a.title === task.label)?.active))} openTaskModal={openTaskModal} />
+              <KanbanContent color="#d264c359" state={1} tasks={tasks.filter(task => task.state === 1 && (!task.label || filters.find(a => a.title === task.label)?.active))} openTaskModal={openTaskModal} getRewards={getRewards}/>
           </div>
           <div className="kanban-column-double">
             <div className="kanban-column">
               <div className="kanban-column-title">🏆 Maddy - {users&&users[0]?users[0].points:'0'}🪙</div>
-              <KanbanContent color="#6bd26459" state={2} tasks={tasks.filter(task => task.state === 2)} openTaskModal={openTaskModal} double={true} />
+              <KanbanContent color="#6bd26459" state={2} tasks={tasks.filter(task => task.state === 2)} openTaskModal={openTaskModal} double={true} getRewards={getRewards}/>
             </div>
             <div className="kanban-column">
               <div className="kanban-column-title">🏆 Mathis - {users&&users[1]?users[1].points:'0'}🪙</div>
-              <KanbanContent color="#6bd26459" state={3} tasks={tasks.filter(task => task.state === 3)} openTaskModal={openTaskModal} double={true} />
+              <KanbanContent color="#6bd26459" state={3} tasks={tasks.filter(task => task.state === 3)} openTaskModal={openTaskModal} double={true} getRewards={getRewards}/>
             </div>
           </div>
         </div>

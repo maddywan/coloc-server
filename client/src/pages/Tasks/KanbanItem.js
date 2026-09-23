@@ -1,7 +1,7 @@
 import { useDraggable } from "@dnd-kit/core";
 import { Check, Clock } from "lucide-react";
 
-const KanbanItem = ({ task, openTaskModal, blockDrag=false }) => {
+const KanbanItem = ({ task, openTaskModal, blockDrag=false, rewards }) => {
     const { attributes, listeners, setNodeRef } = useDraggable({ id: String(task.id) });
     const formattedLimitDate = new Date(task.limit_date).toLocaleDateString("fr-FR", {day: "2-digit", month: "2-digit", year: "numeric"});
     const formattedFinishedDate = new Date(task.finished_date).toLocaleDateString("fr-FR", {day: "2-digit", month: "2-digit", year: "numeric"});
@@ -20,13 +20,6 @@ const KanbanItem = ({ task, openTaskModal, blockDrag=false }) => {
     }
     const formattedPeriodText = getPeriodText();
 
-    const getBonusReward = () => {
-        if (!task.delay_bonus || !task.limit_date || task.finished_date) return 0;
-        const days = Math.round((new Date().setHours(0,0,0,0)-new Date(task.limit_date).setHours(0,0,0,0))/86400000);
-        return days>0?Math.min(days*5,100):0;
-    }
-    const bonusReward = getBonusReward();
-
     const handleEdit = () => {
         openTaskModal(task);
     }
@@ -37,7 +30,7 @@ const KanbanItem = ({ task, openTaskModal, blockDrag=false }) => {
                 <div style={{display: "flex", gap: "5px"}}>
                     <div className="kanban-item-title">{task.title}</div>
                     {task.reward>0?<span className="kanban-item-reward">{task.reward}
-                    {bonusReward?<span style={{color: '#bd0e0e'}}>+{bonusReward}</span>:''}
+                    {rewards&&(rewards[1]-rewards[0]>0)?<span style={{color: '#bd0e0e'}}>+{rewards[1]-rewards[0]}</span>:''}
                     🪙</span>:''}
                 </div>
                 {task.label?<div className="kanban-item-label">#{task.label}</div>:''}

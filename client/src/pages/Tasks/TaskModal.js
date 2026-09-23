@@ -59,7 +59,7 @@ const TaskModal = ({ isOpen, onRequestClose, task }) => {
           limitDate:(enableDate?limitDate:null),
           period:(enableDate?period:0),
           reward:(reward?parseInt(reward):0),
-          delayBonus:(delayBonus&&label!=="Mathis"&&label!=="Maddy")
+          delayBonus:(delayBonus&&enableDate&&label!=="Mathis"&&label!=="Maddy")
         }),
       });
 
@@ -152,7 +152,7 @@ const TaskModal = ({ isOpen, onRequestClose, task }) => {
 
         <span>Récompense 🪙</span>
         <input className='text-input' type="number" step="10" min="0" max="1000" value={reward} onChange={(e) => setReward(e.target.value?Math.min(e.target.value,1000):'')}/>
-          {label!=='Maddy'&&label!=='Mathis'?<div style={{display:"flex"}}>
+          {enableDate&&label!=='Maddy'&&label!=='Mathis'?<div style={{display:"flex"}}>
             <input type='checkbox' className='toggleswitch' checked={delayBonus} onChange={(e) => setDelayBonus(e.target.checked)} style={{margin:"0 0 0 20px"}}/><br/>
             <span style={{margin:"2px 0 0 5px"}}>Bonus de retard</span>
           </div>:''}
