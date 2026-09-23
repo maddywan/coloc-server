@@ -213,7 +213,6 @@ h2 {
     box-sizing: border-box;
     gap: 10px;
     min-height: 70px;
-    overflow: scroll;
 }
 
 .title-bar-item {
@@ -732,6 +731,10 @@ textarea {
 /* PHONE DISPLAY */
 
 @media (max-width: 550px) {
+    .title-bar {
+        overflow: scroll;
+    }
+
     .kanban {
         flex-direction: column;
         height: auto;
