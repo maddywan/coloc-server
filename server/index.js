@@ -332,7 +332,7 @@ app.post('/taskstate', async (req, res) => {
 
     if (state >= 2) {
       // Add to history
-      const historyresult = await pool.query(`INSERT INTO taskhistory (title,reward,finished_date,winner,label) VALUES ($1,$2,$3,$4,$5) RETURNING *;`,[task.title,task.reward,finishedDate,winner,task.label]);
+      const historyresult = await pool.query(`INSERT INTO history (username,title,points,date,label) VALUES ($1,$2,$3,$4,$5) RETURNING *;`,[winner,task.title,task.reward,finishedDate,task.label]);
       if (historyresult.rows.length === 0) return res.status(500).json({ message: 'Error while creating task history.' });
       
       // Give reward
