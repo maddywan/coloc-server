@@ -10,6 +10,17 @@ import PurchasesPage from './Purchases/PurchasesPage';
 import PlanPage from './Plan/PlanPage';
 
 const Home = () => {
+  /* GLOBAL FUNCTIONS */
+
+  const getRewards = (taskId) => {
+    const task = tasks.find(t => t.id === taskId);
+    if (!task) return [0,0,0];
+    if (!task.limit_date || task.finished_date || !task.delay_bonus || (task.label && (task.label==='Maddy' || task.label==='Mathis'))) return [task.reward,task.reward,0];
+    const days = Math.round((new Date().setHours(0,0,0,0)-new Date(task.limit_date).setHours(0,0,0,0))/86400000);
+    return [task.reward,days>0?task.reward+Math.min(days*5,100):task.reward,days>0?Math.min(days*5,100):0];
+    // [0] = base reward only // [1] = base reward + bonus // [2] = bonus only
+  }
+
   /* DATABASE */
 
   const [globalData, setGlobalData] = useState([]);
@@ -108,8 +119,8 @@ const Home = () => {
   /* NAVIGATION */
 
   const pages = [
-    { line: 1, name: "Plan", icon: <Map size={30} />, pageFile: <PlanPage tasks={tasks.filter(t => t.label==="Plan" && t.state<2)} fetchTasks={fetchTasks} fetchUsers={fetchUsers}/> },
-    { line: 1, name: "Tâches", icon: <ReceiptText size={30} />, pageFile: <TasksPage tasks={tasks} setTasks={setTasks} fetchTasks={fetchTasks} users={users} fetchUsers={fetchUsers} /> },
+    { line: 1, name: "Plan", icon: <Map size={30} />, pageFile: <PlanPage tasks={tasks.filter(t => t.label==="Plan" && t.state<2)} fetchTasks={fetchTasks} fetchUsers={fetchUsers} getRewards={getRewards} /> },
+    { line: 1, name: "Tâches", icon: <ReceiptText size={30} />, pageFile: <TasksPage tasks={tasks} setTasks={setTasks} fetchTasks={fetchTasks} users={users} fetchUsers={fetchUsers} getRewards={getRewards} /> },
     { line: 1, name: "Colocation", icon: <Users size={30} />, pageFile: <UsersPage users={users}/> },
     { line: 2, name: "Soundboard", icon: <Speaker size={30} />, pageFile: <></> },
     { line: 2, name: "Courses", icon: <ScrollText size={30} />, pageFile: <PurchasesPage purchases={purchases} setPurchases={setPurchases} fetchPurchases={fetchPurchases} /> },

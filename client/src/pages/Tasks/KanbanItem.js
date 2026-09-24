@@ -30,7 +30,7 @@ const KanbanItem = ({ task, openTaskModal, blockDrag=false, rewards }) => {
                 <div style={{display: "flex", gap: "5px"}}>
                     <div className="kanban-item-title">{task.title}</div>
                     {task.reward>0?<span className="kanban-item-reward">{task.reward}
-                    {rewards&&(rewards[1]-rewards[0]>0)?<span style={{color: '#bd0e0e'}}>+{rewards[1]-rewards[0]}</span>:''}
+                    {rewards&&(rewards[2]>0)?<span style={{color: '#bd0e0e'}}>+{rewards[2]}</span>:''}
                     🪙</span>:''}
                 </div>
                 {task.label?<div className="kanban-item-label">#{task.label}</div>:''}

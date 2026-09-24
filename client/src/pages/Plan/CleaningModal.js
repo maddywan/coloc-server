@@ -61,7 +61,7 @@ const CleaningModal = ({ isOpen, onRequestClose, zones, tasks, checkTasks, getRe
               return <tr key={index}>
                 <td style={{width:"75%"}}>- {task.title}</td>
                 <td>{task.reward}🪙</td>
-                <td style={{color:'#bd0e0e'}}>{rewards&&rewards[1]-rewards[0]>0?'+ '+(rewards[1]-rewards[0]):''}</td>
+                <td style={{color:'#bd0e0e'}}>{rewards&&rewards[2]>0?'+ '+(rewards[2]):''}</td>
               </tr>
             })}
           </table>

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import '../styles.css';
 import CleaningModal from './CleaningModal';
 
-const PlanPage = ({tasks, fetchTasks, fetchUsers}) => {
+const PlanPage = ({tasks, fetchTasks, fetchUsers, getRewards}) => {
 
   /* Zones */
 
@@ -33,14 +33,6 @@ const PlanPage = ({tasks, fetchTasks, fetchUsers}) => {
     document.body.classList.remove('no-scroll');
     setCleaningModalIsOpen(false);
   };
-
-  const getRewards = (taskId) => {
-    const task = tasks.find(t => t.id === taskId);
-    if (!task) return [0,0];
-    if (!task.limit_date || !task.delay_bonus || (task.label && (task.label==='Maddy' || task.label==='Mathis'))) return [task.reward,task.reward];
-    const days = Math.round((new Date().setHours(0,0,0,0)-new Date(task.limit_date).setHours(0,0,0,0))/86400000);
-    return [task.reward,days>0?task.reward+Math.min(days*5,100):task.reward];
-  }
 
   const checkTasks = async(filteredTasks,username) => {
     let newState = 0;

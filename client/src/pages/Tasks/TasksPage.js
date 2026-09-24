@@ -7,7 +7,7 @@ import TaskModal from './TaskModal';
 import { labels } from '../data/data';
 import { X } from 'lucide-react';
 
-const TasksPage = ({ tasks, setTasks, fetchTasks, users, fetchUsers }) => {
+const TasksPage = ({ tasks, setTasks, fetchTasks, users, fetchUsers, getRewards }) => {
   /* MODAL */
 
   const [taskModalIsOpen, setTaskModalIsOpen] = useState(false);
@@ -34,14 +34,6 @@ const TasksPage = ({ tasks, setTasks, fetchTasks, users, fetchUsers }) => {
   const handleDragStart = ({ active }) => {
     setActiveTask(tasks.find(task => task.id === Number(active.id)));
   };
-
-  const getRewards = (taskId) => {
-    const task = tasks.find(t => t.id === taskId);
-    if (!task) return [0,0];
-    if (!task.limit_date || !task.delay_bonus || (task.label && (task.label==='Maddy' || task.label==='Mathis'))) return [task.reward,task.reward];
-    const days = Math.round((new Date().setHours(0,0,0,0)-new Date(task.limit_date).setHours(0,0,0,0))/86400000);
-    return [task.reward,days>0?task.reward+Math.min(days*5,100):task.reward];
-  }
 
   const handleDragEnd = async({ active, over }) => {
     if (!over || activeTask.state===Number(over.id)) return;
