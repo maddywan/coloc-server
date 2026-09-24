@@ -342,7 +342,7 @@ app.post('/taskstate', async (req, res) => {
       // Duplicate periodic tasks
       if (!!task.limit_date && task.period > 0) {
         const newLimitDate = new Date();
-        newLimitDate.setDate(newLimitDate.getDate() + task.period + 1);
+        newLimitDate.setDate(newLimitDate.getDate() + task.period);
         const newtaskresult = await pool.query('INSERT INTO task (title,description,reward,limit_date,period,label,delay_bonus) VALUES ($1,$2,$3,$4,$5,$6,$7) RETURNING *;',[task.title,task.description,reward,newLimitDate.toISOString(),task.period,task.label,task.delay_bonus]);
         if (newtaskresult.rows.length === 0) return res.status(500).json({ message: 'Error while copying task.' });
       }

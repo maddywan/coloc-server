@@ -1,7 +1,6 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import './styles.css';
 import { Users, ReceiptText, Speaker, ScrollText, Settings, Map, ShoppingCart, Calendar } from 'lucide-react';
-//import { useNavigate } from "react-router-dom";
 import VoiceButton from "./VoiceButton";
 import ColocPage from './Coloc/ColocPage';
 import TasksPage from './Tasks/TasksPage';
