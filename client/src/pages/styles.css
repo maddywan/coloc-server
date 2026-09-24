@@ -41,55 +41,8 @@ body {
     box-sizing: border-box;
 }
 
-h1 {
-    text-align: center;
-    color: var(--text);
-    margin-top: 20px;
-    font-size: 2em;
-}
-
 .text-center {
     text-align: center;
-}
-
-.section-container {
-    display: flex;
-}
-
-.article-column-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-}
-
-.article-row-container {
-    width: 99%;
-    margin-left: 1%;
-    text-align: center;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: left;
-}
-
-.article-row-container.fo {
-    justify-content: center;
-    width: 100%;
-    margin-left: 0;
-}
-
-.article-list-container {
-    width: 100%;
-    max-width: 560px;
-    text-align: center;
-    flex-wrap: wrap;
-    justify-content: center;
-    
-    position: sticky;
-    top: 0;
-    height: 100vh;
-    overflow-y: auto;
-    border-left: 1px solid white;
 }
 
 table {

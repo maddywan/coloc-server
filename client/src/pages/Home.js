@@ -1,13 +1,16 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import './styles.css';
-import { Users, ReceiptText, Speaker, ScrollText, Settings, Map } from 'lucide-react';
+import { Users, ReceiptText, Speaker, ScrollText, Settings, Map, ShoppingCart, Calendar } from 'lucide-react';
 //import { useNavigate } from "react-router-dom";
-import UsersPage from './UsersPage';
 import VoiceButton from "./VoiceButton";
+import ColocPage from './Coloc/ColocPage';
 import TasksPage from './Tasks/TasksPage';
-import SettingsPage from './SettingsPage';
-import PurchasesPage from './Purchases/PurchasesPage';
 import PlanPage from './Plan/PlanPage';
+import ShopPage from './Shop/ShopPage';
+import AgendaPage from './Agenda/AgendaPage';
+import PurchasesPage from './Purchases/PurchasesPage';
+import SoundboardPage from './Soundboard/SoundboardPage';
+import SettingsPage from './Settings/SettingsPage';
 
 const Home = () => {
   /* GLOBAL FUNCTIONS */
@@ -119,12 +122,14 @@ const Home = () => {
   /* NAVIGATION */
 
   const pages = [
-    { line: 1, name: "Plan", icon: <Map size={30} />, pageFile: <PlanPage tasks={tasks.filter(t => t.label==="Plan" && t.state<2)} fetchTasks={fetchTasks} fetchUsers={fetchUsers} getRewards={getRewards} /> },
+    { line: 1, name: "Colocation", icon: <Users size={30} />, pageFile: <ColocPage users={users} /> },
     { line: 1, name: "Tâches", icon: <ReceiptText size={30} />, pageFile: <TasksPage tasks={tasks} setTasks={setTasks} fetchTasks={fetchTasks} users={users} fetchUsers={fetchUsers} getRewards={getRewards} /> },
-    { line: 1, name: "Colocation", icon: <Users size={30} />, pageFile: <UsersPage users={users}/> },
-    { line: 2, name: "Soundboard", icon: <Speaker size={30} />, pageFile: <></> },
+    { line: 1, name: "Plan", icon: <Map size={30} />, pageFile: <PlanPage tasks={tasks.filter(t => t.label==="Plan" && t.state<2)} fetchTasks={fetchTasks} fetchUsers={fetchUsers} getRewards={getRewards} /> },
+    { line: 1, name: "Boutique", icon: <ShoppingCart size={30} />, pageFile: <ShopPage /> },
+    { line: 2, name: "Planning", icon: <Calendar size={30} />, pageFile: <AgendaPage /> },
     { line: 2, name: "Courses", icon: <ScrollText size={30} />, pageFile: <PurchasesPage purchases={purchases} setPurchases={setPurchases} fetchPurchases={fetchPurchases} /> },
-    { line: 2, name: "Paramètres", icon: <Settings size={30} />, pageFile: <SettingsPage/> }
+    { line: 2, name: "Soundboard", icon: <Speaker size={30} />, pageFile: <SoundboardPage /> },
+    { line: 2, name: "Paramètres", icon: <Settings size={30} />, pageFile: <SettingsPage /> }
   ];
   const [activePage, setActivePage] = useState("Tâches");
   //const navigate = useNavigate();

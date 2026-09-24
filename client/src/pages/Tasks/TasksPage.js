@@ -84,7 +84,7 @@ const TasksPage = ({ tasks, setTasks, fetchTasks, users, fetchUsers, getRewards 
   /* PAGE */
 
   return (
-    <div className="article-column-container">
+    <div>
       <div className="title-bar">
         <div className="title-bar-item">
           <p style={{margin:"auto"}}>À faire</p>

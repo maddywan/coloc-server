@@ -1,4 +1,4 @@
-import './styles.css';
+import '../styles.css';
 
 const goFullscreen = () => {
     document.documentElement.requestFullscreen();
@@ -6,8 +6,10 @@ const goFullscreen = () => {
 
 const SettingsPage = ({ settings }) => {
   return (
-    <div className='article-column-container'>
-      <h2>Paramètres</h2>
+    <div>
+      <div className="title-bar">
+        <h2 className='title-bar-item'>Paramètres</h2>
+      </div>
       <button className='modal-button info' onClick={goFullscreen}>
         Plein écran
       </button>

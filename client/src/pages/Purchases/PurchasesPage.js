@@ -78,7 +78,7 @@ const PurchasesPage = ({ purchases, setPurchases, fetchPurchases }) => {
   /* PAGE */
 
   return (
-    <div className="article-column-container">
+    <div>
       <div className="title-bar">
         <h2 className='title-bar-item'>Listes de courses</h2>
         <button className="title-bar-item big-button success" onClick={()=>{openPurchaseModal({id:-1,title:""})}}>+ Produit</button>
