@@ -7,7 +7,7 @@ import TaskModal from './TaskModal';
 import { labels } from '../data/data';
 import { X } from 'lucide-react';
 
-const TasksPage = ({ tasks, setTasks, fetchTasks, users, fetchUsers, getRewards }) => {
+const TasksPage = ({ tasks, setTasks, fetchTasks, users, fetchUsers, getRewards, fetchMonthlyPoints, fetchGlobalData }) => {
   /* MODAL */
 
   const [taskModalIsOpen, setTaskModalIsOpen] = useState(false);
@@ -74,6 +74,8 @@ const TasksPage = ({ tasks, setTasks, fetchTasks, users, fetchUsers, getRewards 
     }
     fetchTasks();
     fetchUsers();
+    fetchMonthlyPoints();
+    fetchGlobalData();
   };
 
   /* FILTERS AND DISPLAY */

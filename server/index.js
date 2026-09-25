@@ -339,6 +339,16 @@ app.post('/taskstate', async (req, res) => {
       const userresult = await pool.query(`UPDATE "user" SET points = points + $1 WHERE name = $2 RETURNING *;`,[task.reward,winner])
       if (userresult.rows.length === 0) return res.status(500).json({ message: 'User not found.' });
 
+      // Add to global points
+      const globalpointsResult = await pool.query(`UPDATE globaldata SET value = COALESCE(value,0) + $1 WHERE key = 'globalpoints' RETURNING *;`, [task.reward]);
+
+      // Add to monthly points
+      const finished = new Date(finishedDate);
+      const month = finished.getUTCMonth()+1;
+      const year = finished.getUTCFullYear();
+      const monthlyPointsResult = await pool.query(`INSERT INTO monthlypoints (month,year,points) VALUES ($1,$2,$3) ON CONFLICT (month,year)
+        DO UPDATE SET points = monthlypoints.points + EXCLUDED.points RETURNING *;`,[month,year,task.reward]);
+
       // Duplicate periodic tasks
       if (!!task.limit_date && task.period > 0) {
         const newLimitDate = new Date();
@@ -442,6 +452,20 @@ app.post('/deletepurchase', async (req, res) => {
     if (purchaseResult.rows.length === 0) return res.status(500).json({ message: 'Purchase not found.' });
 
     res.json(purchaseResult.rows[0]);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
+
+// Monthly Points
+app.get('/monthlypoints', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT * FROM monthlypoints');
+
+    const monthlypoints = result.rows;
+
+    res.json(monthlypoints);
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');

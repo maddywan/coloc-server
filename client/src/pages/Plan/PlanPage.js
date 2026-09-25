@@ -2,7 +2,7 @@ import { useState } from 'react';
 import '../styles.css';
 import CleaningModal from './CleaningModal';
 
-const PlanPage = ({tasks, fetchTasks, fetchUsers, getRewards}) => {
+const PlanPage = ({tasks, fetchTasks, fetchUsers, getRewards, fetchMonthlyPoints, fetchGlobalData}) => {
 
   /* Zones */
 
@@ -59,6 +59,8 @@ const PlanPage = ({tasks, fetchTasks, fetchUsers, getRewards}) => {
 
       fetchTasks();
       fetchUsers();
+      fetchMonthlyPoints();
+      fetchGlobalData();
     });
 
     closeCleaningModal();
