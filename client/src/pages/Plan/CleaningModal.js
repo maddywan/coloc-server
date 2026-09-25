@@ -54,7 +54,7 @@ const CleaningModal = ({ isOpen, onRequestClose, zones, tasks, checkTasks, getRe
         
         {username&&type?<>
           <div style={{textAlign:"center"}}>Tâches effectuées :</div>
-          <table>
+          <table className='invisible'>
             {filteredTasks.map((task, index) => {
               const rewards = getRewards(task.id);
 

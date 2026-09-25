@@ -9,14 +9,10 @@ const PORT = process.env.PORT || 3001;
 const app = express();
 app.use(express.json());
 app.use(express.static(path.resolve(__dirname, '../client/build')));
-
-const multer = require('multer');
-const cloudinary = require('cloudinary').v2;
-const { Readable } = require('stream');
 const { log } = require('console');
-const OpenAI = require('openai');
 
 // Config Cloudinary
+const cloudinary = require('cloudinary').v2;
 cloudinary.config({
   cloud_name: process.env.CLOUDNAME,
   api_key: process.env.CLOUDKEY,
@@ -24,6 +20,7 @@ cloudinary.config({
 });
 
 // Multer en mémoire (pas besoin de disque)
+const multer = require('multer');
 const storage = multer.memoryStorage();
 const upload = multer({
   storage,
@@ -31,6 +28,7 @@ const upload = multer({
 });
 
 // Fonction utilitaire pour uploader depuis un buffer
+const { Readable } = require('stream');
 const streamUpload = (buffer) => {
   return new Promise((resolve, reject) => {
     const stream = cloudinary.uploader.upload_stream(
@@ -67,9 +65,16 @@ app.post('/cocktailimage', upload.single('image'), async (req, res) => {
 });
 
 // Open AI Config
+const OpenAI = require('openai');
 const openai = new OpenAI({
   apiKey: process.env.OPENAIKEY
 });
+
+// Ical Config
+const ical = require('node-ical');
+const GOOGLE_CALENDAR_1 = process.env.GOOGLE_CALENDAR_1;
+
+// AI Request // Voice Button
 
 app.post('/airequest', async (req, res) => {
   try {
@@ -469,6 +474,47 @@ app.get('/monthlypoints', async (req, res) => {
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');
+  }
+});
+
+// Plannings
+app.get('/agenda', async (req, res) => {
+  try {
+    const calendar = await ical.async.fromURL(GOOGLE_CALENDAR_1);
+    
+    const events = Object.values(calendar)
+      .filter(event => event.type === 'VEVENT')
+      .map(event => ({
+        id: event.uid,
+        title: event.summary || '',
+        description: event.description || '',
+        location: event.location || '',
+
+        start: event.start
+          ? event.start.toISOString()
+          : null,
+
+        end: event.end
+          ? event.end.toISOString()
+          : null,
+
+        allDay: event.datetype === 'date',
+
+        status: event.status || null,
+        url: event.url || null
+      }))
+      .sort((a, b) => {
+        return new Date(a.start) - new Date(b.start);
+      });
+
+    res.json(events);
+
+  } catch (error) {
+    console.error('Erreur Google Calendar:', error);
+
+    res.status(500).json({
+      message: 'Impossible de récupérer le calendrier.'
+    });
   }
 });
 

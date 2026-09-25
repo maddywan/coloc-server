@@ -14,7 +14,7 @@ const ColocPage = ({ users, globalData, monthlyPoints }) => {
       <hr/>
       <br/>
       <div style={{fontSize:"25px", textAlign:"center"}}>Détail par mois</div>
-      <table>
+      <table className='invisible'>
         {monthlyPoints.map(mp => (
           <tr>
             <td>{["Jan.","Fév.","Mars","Avr.","Mai","Juin","Juil.","Août","Sept.","Oct.","Nov.","Déc"][mp.month-1]} {mp.year}</td>
