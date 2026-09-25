@@ -6,8 +6,9 @@ import { useState } from 'react';
 import TaskModal from './TaskModal';
 import { labels } from '../data/data';
 import { X } from 'lucide-react';
+import VoiceButton from '../VoiceButton';
 
-const TasksPage = ({ tasks, setTasks, fetchTasks, users, fetchUsers, getRewards, fetchMonthlyPoints, fetchGlobalData }) => {
+const TasksPage = ({ tasks, setTasks, fetchTasks, users, fetchUsers, getRewards, fetchMonthlyPoints, fetchGlobalData, afterVoiceButton }) => {
   /* MODAL */
 
   const [taskModalIsOpen, setTaskModalIsOpen] = useState(false);
@@ -138,6 +139,8 @@ const TasksPage = ({ tasks, setTasks, fetchTasks, users, fetchUsers, getRewards,
         onRequestClose={closeTaskModal}
         task={selectedTask}
       />
+
+      <VoiceButton context={"task"} onFinished={afterVoiceButton} />
     </div>
   );
 };

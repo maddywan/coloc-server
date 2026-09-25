@@ -1,7 +1,7 @@
 import { LoaderCircle, Mic } from "lucide-react";
 import { useRef, useState } from "react";
 
-function VoiceButton({ onFinished }) {
+function VoiceButton({ context, onFinished }) {
     const [listening, setListening] = useState(false);
     const [processing, setProcessing] = useState(false);
     const recognitionRef = useRef(null);

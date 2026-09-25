@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import './styles.css';
 import { Users, ReceiptText, Speaker, ScrollText, Settings, Map, ShoppingCart, Calendar } from 'lucide-react';
-import VoiceButton from "./VoiceButton";
 import ColocPage from './Coloc/ColocPage';
 import TasksPage from './Tasks/TasksPage';
 import PlanPage from './Plan/PlanPage';
@@ -134,10 +133,10 @@ const Home = () => {
   const pages = [
     { line: 1, name: "Colocation", icon: <Users size={30} />, pageFile: <ColocPage users={users} globalData={globalData} monthlyPoints={monthlyPoints} /> },
     { line: 1, name: "Tâches", icon: <ReceiptText size={30} />, pageFile: <TasksPage tasks={tasks} setTasks={setTasks} fetchTasks={fetchTasks} users={users} fetchUsers={fetchUsers} getRewards={getRewards} fetchMonthlyPoints={fetchMonthlyPoints} fetchGlobalData={fetchGlobalData} /> },
-    { line: 1, name: "Plan", icon: <Map size={30} />, pageFile: <PlanPage tasks={tasks.filter(t => t.label==="Plan" && t.state<2)} fetchTasks={fetchTasks} fetchUsers={fetchUsers} getRewards={getRewards} fetchMonthlyPoints={fetchMonthlyPoints} fetchGlobalData={fetchGlobalData} /> },
+    { line: 1, name: "Plan", icon: <Map size={30} />, pageFile: <PlanPage tasks={tasks.filter(t => t.label==="Plan" && t.state<2)} fetchTasks={fetchTasks} fetchUsers={fetchUsers} getRewards={getRewards} fetchMonthlyPoints={fetchMonthlyPoints} fetchGlobalData={fetchGlobalData} afterVoiceButton={fetchAll} /> },
     { line: 1, name: "Boutique", icon: <ShoppingCart size={30} />, pageFile: <ShopPage /> },
     { line: 2, name: "Planning", icon: <Calendar size={30} />, pageFile: <AgendaPage /> },
-    { line: 2, name: "Courses", icon: <ScrollText size={30} />, pageFile: <PurchasesPage purchases={purchases} setPurchases={setPurchases} fetchPurchases={fetchPurchases} /> },
+    { line: 2, name: "Courses", icon: <ScrollText size={30} />, pageFile: <PurchasesPage purchases={purchases} setPurchases={setPurchases} fetchPurchases={fetchPurchases} afterVoiceButton={fetchAll} /> },
     { line: 2, name: "Soundboard", icon: <Speaker size={30} />, pageFile: <SoundboardPage /> },
     { line: 2, name: "Paramètres", icon: <Settings size={30} />, pageFile: <SettingsPage /> }
   ];
@@ -150,7 +149,6 @@ const Home = () => {
       <div>
         {pages.find((page) => (activePage === page.name)).pageFile}
       </div>
-      <VoiceButton onFinished={fetchAll} />
       <div className='toolbar-space'></div>
        <div className="bottom-toolbar up">
         {pages.map((page) => (page.line === 1 &&

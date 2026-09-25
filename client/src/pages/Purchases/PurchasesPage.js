@@ -4,8 +4,9 @@ import PurchaseContent from './PurchaseContent';
 import PurchaseItem from './PurchaseItem';
 import { useState } from 'react';
 import PurchaseModal from './PurchaseModal';
+import VoiceButton from '../VoiceButton';
 
-const PurchasesPage = ({ purchases, setPurchases, fetchPurchases }) => {
+const PurchasesPage = ({ purchases, setPurchases, fetchPurchases, afterVoiceButton }) => {
   /* MODAL */
 
   const [purchaseModalIsOpen, setPurchaseModalIsOpen] = useState(false);
@@ -109,6 +110,8 @@ const PurchasesPage = ({ purchases, setPurchases, fetchPurchases }) => {
         onRequestClose={closePurchaseModal}
         purchase={selectedPurchase}
       />
+
+      <VoiceButton context="purchase" onFinished={afterVoiceButton} />
     </div>
   );
 };

@@ -481,31 +481,73 @@ app.get('/monthlypoints', async (req, res) => {
 app.get('/agenda', async (req, res) => {
   try {
     const calendar = await ical.async.fromURL(GOOGLE_CALENDAR_1);
-    
-    const events = Object.values(calendar)
-      .filter(event => event.type === 'VEVENT')
-      .map(event => ({
-        id: event.uid,
-        title: event.summary || '',
-        description: event.description || '',
-        location: event.location || '',
 
-        start: event.start
-          ? event.start.toISOString()
-          : null,
+    const startDate = new Date();
+    startDate.setHours(0, 0, 0, 0);
+    startDate.setMonth(startDate.getMonth() - 6);
 
-        end: event.end
-          ? event.end.toISOString()
-          : null,
+    const endDate = new Date();
+    endDate.setHours(23, 59, 59, 999);
+    endDate.setMonth(endDate.getMonth() + 6);
 
-        allDay: event.datetype === 'date',
+    const events = [];
 
-        status: event.status || null,
-        url: event.url || null
-      }))
-      .sort((a, b) => {
-        return new Date(a.start) - new Date(b.start);
-      });
+    for (const event of Object.values(calendar)) {
+      if (event.type !== 'VEVENT') continue;
+
+      if (event.rrule) {
+        const occurrences = ical.expandRecurringEvent(event, {
+          from: startDate,
+          to: endDate
+        });
+
+        for (const occurrence of occurrences) {
+          events.push({
+            id: `${event.uid}-${occurrence.start.getTime()}`,
+            title: event.summary || '',
+            description: event.description || '',
+            location: event.location || '',
+
+            start: occurrence.start
+              ? occurrence.start.toISOString()
+              : null,
+
+            end: occurrence.end
+              ? occurrence.end.toISOString()
+              : null,
+
+            allDay: event.datetype === 'date',
+
+            status: event.status || null,
+            url: event.url || null
+          });
+        }
+      } else {
+        events.push({
+          id: event.uid,
+          title: event.summary || '',
+          description: event.description || '',
+          location: event.location || '',
+
+          start: event.start
+            ? event.start.toISOString()
+            : null,
+
+          end: event.end
+            ? event.end.toISOString()
+            : null,
+
+          allDay: event.datetype === 'date',
+
+          status: event.status || null,
+          url: event.url || null
+        });
+      }
+    }
+
+    events.sort((a, b) => {
+      return new Date(a.start) - new Date(b.start);
+    });
 
     res.json(events);
 

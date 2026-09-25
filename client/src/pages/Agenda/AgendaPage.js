@@ -42,7 +42,7 @@ const AgendaPage = () => {
           firstDay={1}
           height="calc(100vh - 360px)"
           expandRows={true}
-          slotMinTime="08:00:00"
+          slotMinTime="10:00:00"
           slotMaxTime="23:59:59"
           nowIndicator={true}
           allDaySlot={false}
