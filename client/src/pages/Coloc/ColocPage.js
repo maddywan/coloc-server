@@ -19,6 +19,7 @@ const ColocPage = ({ users, globalData, monthlyPoints }) => {
           <tr>
             <td>{["Jan.","Fév.","Mars","Avr.","Mai","Juin","Juil.","Août","Sept.","Oct.","Nov.","Déc"][mp.month-1]} {mp.year}</td>
             <td>{mp.points}🪙</td>
+            {mp.user_points?mp.user_points.map(up => <td>{up.type} : {up.points}🪙</td>):''}
           </tr>
         ))}
       </table>

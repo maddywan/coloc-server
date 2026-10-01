@@ -351,14 +351,16 @@ app.post('/taskstate', async (req, res) => {
       const finished = new Date(finishedDate);
       const month = finished.getUTCMonth()+1;
       const year = finished.getUTCFullYear();
-      const monthlyPointsResult = await pool.query(`INSERT INTO monthlypoints (month,year,points) VALUES ($1,$2,$3) ON CONFLICT (month,year)
-        DO UPDATE SET points = monthlypoints.points + EXCLUDED.points RETURNING *;`,[month,year,task.reward]);
+      const monthlyPointsResult = await pool.query(`INSERT INTO monthlypoints (type,month,year,points) VALUES ($1,$2,$3,$4) ON CONFLICT (type,month,year)
+        DO UPDATE SET points = monthlypoints.points + EXCLUDED.points RETURNING *;`,["global",month,year,task.reward]);
+      const monthlyWinnerPointsResult = await pool.query(`INSERT INTO monthlypoints (type,month,year,points) VALUES ($1,$2,$3,$4) ON CONFLICT (type,month,year)
+        DO UPDATE SET points = monthlypoints.points + EXCLUDED.points RETURNING *;`,[winner,month,year,task.reward]);
 
       // Duplicate periodic tasks
       if (!!task.limit_date && task.period > 0) {
         const newLimitDate = new Date();
         newLimitDate.setDate(newLimitDate.getDate() + task.period);
-        const newtaskresult = await pool.query('INSERT INTO task (title,description,reward,limit_date,period,label,delay_bonus) VALUES ($1,$2,$3,$4,$5,$6,$7) RETURNING *;',[task.title,task.description,reward,newLimitDate.toISOString(),task.period,task.label,task.delay_bonus]);
+        const newtaskresult = await pool.query('INSERT INTO task (title,description,reward,limit_date,period,label,delay_bonus,state) VALUES ($1,$2,$3,$4,$5,$6,$7,0) RETURNING *;',[task.title,task.description,reward,newLimitDate.toISOString(),task.period,task.label,task.delay_bonus]);
         if (newtaskresult.rows.length === 0) return res.status(500).json({ message: 'Error while copying task.' });
       }
     }
@@ -466,7 +468,12 @@ app.post('/deletepurchase', async (req, res) => {
 // Monthly Points
 app.get('/monthlypoints', async (req, res) => {
   try {
-    const result = await pool.query('SELECT * FROM monthlypoints');
+    const result = await pool.query(`SELECT month,year,
+      SUM(points) FILTER (WHERE type = 'global') AS points,
+      COALESCE(jsonb_agg(jsonb_build_object('type',type,'points',points) ORDER BY type) FILTER (WHERE type <> 'global'),'[]'::jsonb) AS user_points
+      FROM monthlypoints
+      GROUP BY year, month
+      ORDER BY year DESC, month DESC;`);
 
     const monthlypoints = result.rows;
 
