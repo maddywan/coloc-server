@@ -40,18 +40,18 @@ const TasksPage = ({ tasks, setTasks, fetchTasks, users, fetchUsers, getRewards,
 
     confetti({
       particleCount: 500,
-      spread: 90,
+      spread: 120,
       angle: 20,
-      origin: { y: 0.5, x:-0.2 },
-      decay: 0.95,
+      origin: { y: 0.5, x:-0.3 },
+      decay: 0.92,
     });
 
     confetti({
       particleCount: 500,
-      spread: 90,
+      spread: 120,
       angle: 160,
-      origin: { y: 0.5, x: 1.2 },
-      decay: 0.95,
+      origin: { y: 0.5, x: 1.3 },
+      decay: 0.92,
     });
 
     setVictoryWindowIsOpen(true);

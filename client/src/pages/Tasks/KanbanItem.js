@@ -5,7 +5,7 @@ const KanbanItem = ({ task, openTaskModal, blockDrag=false, rewards }) => {
     const { attributes, listeners, setNodeRef } = useDraggable({ id: String(task.id) });
     const formattedLimitDate = new Date(task.limit_date).toLocaleDateString("fr-FR", {day: "2-digit", month: "2-digit", year: "numeric"});
     const formattedFinishedDate = new Date(task.finished_date).toLocaleDateString("fr-FR", {day: "2-digit", month: "2-digit", year: "numeric"});
-    const dateColor = task.limit_date && new Date(task.limit_date) < new Date().setHours(0,0,0,0)?'red':'orange';
+    const dateColor = task.limit_date && new Date(task.limit_date) <= new Date().setHours(0,0,0,0)?'red':'orange';
     
     const getPeriodText = () => {
         if (task.period === 1) return "Quotidien";
