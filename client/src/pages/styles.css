@@ -733,6 +733,20 @@ textarea {
     overflow: hidden;
 }
 
+/* VICTORY WINDOW */
+
+.victory-window {
+  opacity: 0;
+  transition: opacity 2s ease;
+  pointer-events: none;
+  top: 40%;
+}
+
+.victory-window.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
 /* PHONE DISPLAY */
 
 @media (max-width: 550px) {

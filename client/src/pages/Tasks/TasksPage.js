@@ -1,18 +1,22 @@
 import '../styles.css';
 import { DndContext, DragOverlay, PointerSensor, useSensor, useSensors } from "@dnd-kit/core";
+import confetti from "canvas-confetti";
 import KanbanContent from './KanbanContent';
 import KanbanItem from './KanbanItem';
 import { useState } from 'react';
 import TaskModal from './TaskModal';
 import { labels } from '../data/data';
-import { X } from 'lucide-react';
+import { CheckCircle, X } from 'lucide-react';
 import VoiceButton from '../VoiceButton';
+import { victoryMessages } from '../data/data';
 
 const TasksPage = ({ tasks, setTasks, fetchTasks, users, fetchUsers, getRewards, fetchMonthlyPoints, fetchGlobalData, afterVoiceButton }) => {
   /* MODAL */
 
   const [taskModalIsOpen, setTaskModalIsOpen] = useState(false);
   const [selectedTask, setSelectedTask] = useState(null);
+  const [victoryWindowIsOpen, setVictoryWindowIsOpen] = useState(false);
+  const [victoryMessage, setVictoryMessage] = useState("");
   
   const openTaskModal = (task) => {
     document.body.classList.add('no-scroll');
@@ -26,6 +30,36 @@ const TasksPage = ({ tasks, setTasks, fetchTasks, users, fetchUsers, getRewards,
     setSelectedTask(null);
     fetchTasks();
   };
+
+  const openVictoryWindow = () => {
+    setVictoryMessage(victoryMessages[Math.floor(Math.random()*victoryMessages.length)]);
+
+    const audio = new Audio("/sounds/victory_vlog.mp3");
+    audio.volume = 1;
+    audio.play();
+
+    confetti({
+      particleCount: 500,
+      spread: 90,
+      angle: 20,
+      origin: { y: 0.5, x:-0.2 },
+      decay: 0.95,
+    });
+
+    confetti({
+      particleCount: 500,
+      spread: 90,
+      angle: 160,
+      origin: { y: 0.5, x: 1.2 },
+      decay: 0.95,
+    });
+
+    setVictoryWindowIsOpen(true);
+  }
+
+  const closeVictoryWindow = () => {
+    setVictoryWindowIsOpen(false);
+  }
 
   /* DRAGGING */
 
@@ -73,6 +107,7 @@ const TasksPage = ({ tasks, setTasks, fetchTasks, users, fetchUsers, getRewards,
       console.error('Error updating task :', error);
       alert('Error updating task.');
     }
+    openVictoryWindow();
     fetchTasks();
     fetchUsers();
     fetchMonthlyPoints();
@@ -139,6 +174,16 @@ const TasksPage = ({ tasks, setTasks, fetchTasks, users, fetchUsers, getRewards,
         onRequestClose={closeTaskModal}
         task={selectedTask}
       />
+
+      <div className={'modal victory-window '+(victoryWindowIsOpen?'visible':'')}>
+        <h2 className='text-center' style={{marginBlockStart:'0'}}>Félicitation !</h2>
+        <br/>
+        <CheckCircle size={50} className='text-center' style={{width:"100%",color:"green"}}/>
+        <br/><br/>
+        <div className='text-center' style={{fontStyle:'italic'}}>{victoryMessage}</div>
+        <br/>
+        <button className='modal-button info' onClick={closeVictoryWindow}>Fermer</button>
+      </div>
 
       <VoiceButton context={"task"} onFinished={afterVoiceButton} />
     </div>
