@@ -40,8 +40,7 @@ function VoiceButton({ context, onFinished }) {
                 }),
             });
 
-            const result = await response.json();
-            console.log(result);
+            await response.json();
 
             setProcessing(false);
             setListening(false);

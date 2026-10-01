@@ -122,7 +122,6 @@ const Home = () => {
         console.error('Error with /refreshtask endpoint.', error);
         alert('Error with /refreshtask endpoint.');
       }
-      console.log("REFRESH FAIT");
       fetchGlobalData();
     }
   }

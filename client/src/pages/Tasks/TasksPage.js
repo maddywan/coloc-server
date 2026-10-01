@@ -82,7 +82,6 @@ const TasksPage = ({ tasks, setTasks, fetchTasks, users, fetchUsers, getRewards,
     if (newState === 2) {
       winner = "Maddy";
       finishedDate = new Date().toLocaleDateString('sv-SE');
-      console.log(finishedDate);
     } else if (newState === 3) {  
       winner = "Mathis";
       finishedDate = new Date().toLocaleDateString('sv-SE');
@@ -107,7 +106,7 @@ const TasksPage = ({ tasks, setTasks, fetchTasks, users, fetchUsers, getRewards,
       console.error('Error updating task :', error);
       alert('Error updating task.');
     }
-    openVictoryWindow();
+    if (newState >= 2) openVictoryWindow();
     fetchTasks();
     fetchUsers();
     fetchMonthlyPoints();
