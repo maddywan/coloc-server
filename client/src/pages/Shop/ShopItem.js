@@ -10,7 +10,7 @@ const ShopItem = ({ article, openShopModal }) => {
             </div>
             <div className="shop-item-bottom">
                 <div className="shop-item-title">{article.title}</div>
-                <button className="shop-item-button" disabled>Acheter pour {article.price}🪙</button>
+                <button className="shop-item-button">Acheter pour {article.price}🪙</button>
             </div>
         </div>
     );

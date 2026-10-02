@@ -73,7 +73,7 @@ const ShopModal = ({ isOpen, onRequestClose, article }) => {
         <br/>
 
         <span>Prix 🪙</span>
-        <input className='text-input' type="number" step="10" min="0" max="1000" value={price} onChange={(e) => setPrice(e.target.value?Math.min(e.target.value,1000):'')}/>
+        <input className='text-input' type="number" step="10" min="0" max="100000" value={price} onChange={(e) => setPrice(e.target.value?Math.min(e.target.value,100000):'')}/>
         <br/>
 
         <div style={{display:"flex"}}>
