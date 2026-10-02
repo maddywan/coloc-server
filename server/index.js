@@ -284,7 +284,7 @@ app.post('/globaldata', async (req, res) => {
 
 app.post('/refreshtask', async (req, res) => {
   try {
-    const refreshedTasks = await pool.query(`UPDATE task SET state = 1 WHERE limit_date <= CURRENT_DATE AND finished_date IS NULL RETURNING *;`);
+    const refreshedTasks = await pool.query(`UPDATE task SET state = 1 WHERE limit_date <= CURRENT_DATE + INTERVAL '1 day' AND finished_date IS NULL RETURNING *;`);
     const deletedTasks = await pool.query(`DELETE FROM task WHERE finished_date < NOW() - INTERVAL '3 days' RETURNING *;`);
     const updatedData = await pool.query(`UPDATE globaldata SET date = CURRENT_DATE WHERE key = 'refreshtask' RETURNING *;`);
     res.json(updatedData.rows);
@@ -419,14 +419,14 @@ app.get('/purchase', async (req, res) => {
 
 app.post('/purchase', async (req, res) => {
   try {
-    const { purchaseId, title } = req.body;
+    const { purchaseId, title, list } = req.body;
 
     if (purchaseId === -1) {
-      const result = await pool.query('INSERT INTO purchase (title) VALUES ($1) RETURNING *;',[title]);
+      const result = await pool.query('INSERT INTO purchase (title,list) VALUES ($1,$2) RETURNING *;',[title,list]);
       const purchases = result.rows;
       res.json(purchases);
     } else {
-      const result = await pool.query('UPDATE purchase SET title = $1 WHERE id = $2 RETURNING *;',[title,purchaseId]);
+      const result = await pool.query('UPDATE purchase SET title = $1, list = $2 WHERE id = $3 RETURNING *;',[title,list,purchaseId]);
       const purchases = result.rows;
       res.json(purchases);
     }
@@ -459,6 +459,40 @@ app.post('/deletepurchase', async (req, res) => {
     if (purchaseResult.rows.length === 0) return res.status(500).json({ message: 'Purchase not found.' });
 
     res.json(purchaseResult.rows[0]);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
+
+// Shop
+app.get('/shop', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT * FROM shop ORDER BY price;');
+
+    const shop = result.rows;
+
+    res.json(shop);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
+
+app.post('/shop', async (req, res) => {
+  try {
+    const { articleId, userId, title, price, stock, imgLink } = req.body;
+
+    if (articleId === -1) {
+      const result = await pool.query('INSERT INTO shop (user_id,title,price,stock,img_link) VALUES ($1,$2,$3,$4,$5) RETURNING *;',[userId,title,price,stock,imgLink]);
+      const shop = result.rows;
+      res.json(shop);
+    } else {
+      const result = await pool.query('UPDATE shop SET user_id = $1, title = $2, price = $3, stock = $4, img_link = $5 WHERE id = $6 RETURNING *;',[userId,title,price,stock,imgLink,articleId]);
+      const shop = result.rows;
+      res.json(shop);
+    }
+
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');
