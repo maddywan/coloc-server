@@ -27,6 +27,7 @@ const Home = () => {
   const [globalData, setGlobalData] = useState([]);
   const [tasks, setTasks] = useState([]);
   const [purchases, setPurchases] = useState([]);
+  const [shop, setShop] = useState([]);
   const [monthlyPoints, setMonthlyPoints] = useState([]);
   const [users, setUsers] = useState([]);
 
@@ -77,6 +78,15 @@ const Home = () => {
       .catch((error) => console.error("Error fetching purchases:", error));
   }, []);
 
+  const fetchShop = useCallback(() => {
+    fetch("/shop")
+      .then((res) => res.json())
+      .then((data) => {
+        setShop(data);
+      })
+      .catch((error) => console.error("Error fetching shop:", error));
+  }, []);
+
   const fetchMonthlyPoints = useCallback(() => {
     fetch("/monthlypoints")
       .then((res) => res.json())
@@ -99,9 +109,10 @@ const Home = () => {
     fetchGlobalData();
     fetchTasks();
     fetchPurchases();
+    fetchShop();
     fetchMonthlyPoints();
     fetchUsers();
-  }, [fetchGlobalData,fetchTasks,fetchPurchases,fetchMonthlyPoints,fetchUsers]);
+  }, [fetchGlobalData,fetchTasks,fetchPurchases,fetchShop,fetchMonthlyPoints,fetchUsers]);
 
   useEffect(() => {
     fetchAll();
@@ -133,7 +144,7 @@ const Home = () => {
     { line: 1, name: "Colocation", icon: <Users size={30} />, pageFile: <ColocPage users={users} globalData={globalData} monthlyPoints={monthlyPoints} /> },
     { line: 1, name: "Tâches", icon: <ReceiptText size={30} />, pageFile: <TasksPage tasks={tasks} setTasks={setTasks} fetchTasks={fetchTasks} users={users} fetchUsers={fetchUsers} getRewards={getRewards} fetchMonthlyPoints={fetchMonthlyPoints} fetchGlobalData={fetchGlobalData} /> },
     { line: 1, name: "Plan", icon: <Map size={30} />, pageFile: <PlanPage tasks={tasks.filter(t => t.label==="Plan" && t.state<2)} fetchTasks={fetchTasks} fetchUsers={fetchUsers} getRewards={getRewards} fetchMonthlyPoints={fetchMonthlyPoints} fetchGlobalData={fetchGlobalData} afterVoiceButton={fetchAll} /> },
-    { line: 1, name: "Boutique", icon: <ShoppingCart size={30} />, pageFile: <ShopPage /> },
+    { line: 1, name: "Boutique", icon: <ShoppingCart size={30} />, pageFile: <ShopPage shop={shop} fetchShop={fetchShop}/> },
     { line: 2, name: "Planning", icon: <Calendar size={30} />, pageFile: <AgendaPage /> },
     { line: 2, name: "Courses", icon: <ScrollText size={30} />, pageFile: <PurchasesPage purchases={purchases} setPurchases={setPurchases} fetchPurchases={fetchPurchases} afterVoiceButton={fetchAll} /> },
     { line: 2, name: "Soundboard", icon: <Speaker size={30} />, pageFile: <SoundboardPage /> },
