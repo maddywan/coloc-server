@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import './styles.css';
 import { Users, ReceiptText, Speaker, ScrollText, Settings, Map, ShoppingCart, Calendar } from 'lucide-react';
+import { dateValue, getTaskRewards } from './data/functions';
 import ColocPage from './Coloc/ColocPage';
 import TasksPage from './Tasks/TasksPage';
 import PlanPage from './Plan/PlanPage';
@@ -16,10 +17,7 @@ const Home = () => {
   const getRewards = (taskId) => {
     const task = tasks.find(t => t.id === taskId);
     if (!task) return [0,0,0];
-    if (!task.limit_date || task.finished_date || !task.delay_bonus || (task.label && (task.label==='Maddy' || task.label==='Mathis'))) return [task.reward,task.reward,0];
-    const days = Math.round((new Date().setHours(0,0,0,0)-new Date(task.limit_date).setHours(0,0,0,0))/86400000);
-    return [task.reward,days>0?task.reward+Math.min(days*5,100):task.reward,days>0?Math.min(days*5,100):0];
-    // [0] = base reward only // [1] = base reward + bonus // [2] = bonus only
+    return getTaskRewards(task);
   }
 
   /* DATABASE */
@@ -52,14 +50,14 @@ const Home = () => {
 
           if (aFinished !== bFinished) return aFinished ? 1 : -1;
           else if (aFinished && bFinished) {
-            const dateDiff = new Date(b.finished_date).getTime() - new Date(a.finished_date).getTime();
+            const dateDiff = dateValue(b.finished_date) - dateValue(a.finished_date);
             if (dateDiff !== 0) return dateDiff;
             return Number(b.reward) - Number(a.reward);
           }
           
           if (aHasDate !== bHasDate) return aHasDate ? 1 : -1;
           else if (aHasDate && bHasDate) {
-            const dateDiff = new Date(a.limit_date).getTime() - new Date(b.limit_date).getTime();
+            const dateDiff = dateValue(a.finished_date) - dateValue(b.finished_date);
             if (dateDiff !== 0) return dateDiff;
           }
           
